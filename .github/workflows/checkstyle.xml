@@ -203,7 +203,7 @@
             <property name="ignoreStatic" value="false"/>
             <property name="ignoreStaticFinal" value="true"/>
             <property name="allowedAbbreviationLength" value="0"/>
-            <property name="allowedAbbreviations" value="URL,DTO"/>
+            <property name="allowedAbbreviations" value="URL,DTO,EB"/>
         </module>
         <module name="OverloadMethodsDeclarationOrder"/>
         <!--module name="VariableDeclarationUsageDistance"/-->
