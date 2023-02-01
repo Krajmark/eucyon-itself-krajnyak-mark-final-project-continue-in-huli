@@ -2,10 +2,29 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.0.2'
     id 'io.spring.dependency-management' version '1.1.0'
+    //https://github.com/qoomon/gradle-git-versioning-plugin
+    id 'me.qoomon.git-versioning' version '6.3.6'
+    id 'jacoco'
 }
 
 group = 'com.greenfoxacademy'
-version = '0.0.1-SNAPSHOT'
+version = 'This is basically placeholder text at this point'
+gitVersioning.apply {
+    refs {
+        considerTagsOnBranches = true
+        tag('v(?<version>.*)') {
+            version = '${describe.tag}-SNAPSHOT'
+        }
+        branch('.+') {
+            version = '${ref}_${commit.short}-SNAPSHOT'
+        }
+    }
+
+    // optional fallback configuration in case of no matching ref configuration
+    rev {
+        version = '${commit.short}-SNAPSHOT'
+    }
+}
 sourceCompatibility = '17'
 
 repositories {
@@ -23,4 +42,49 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+test {
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required = false
+        csv.required = false
+        html.required = true
+    }
+
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, includes: [
+                    "**/controllers/*",
+                    "**/services/*"
+            ])
+        }))
+    }
+}
+
+
+jacocoTestCoverageVerification {
+    dependsOn test
+    violationRules {
+        rule {
+            limit {
+                counter = 'INSTRUCTION'
+                value = 'COVEREDRATIO'
+                minimum = 0.5
+            }
+        }
+    }
+
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, includes: [
+                    "**/controllers/*",
+                    "**/services/*"
+            ])
+        }))
+    }
 }
