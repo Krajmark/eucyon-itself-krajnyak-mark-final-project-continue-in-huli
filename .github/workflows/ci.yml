@@ -6,8 +6,8 @@ on:
 
     branches: [main]
 
-    push:
-      branches: [dev]
+  push:
+    branches: [dev]
 
   workflow_dispatch:
 
