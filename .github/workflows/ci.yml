@@ -29,7 +29,7 @@ jobs:
           DEFAULT_BRANCH: ${{ github.base_ref }}
           VALIDATE_ALL_CODEBASE: false
           LINTER_RULES_PATH: .github/workflows
-          LOG_LEVEL: WARN
+          LOG_LEVEL: NOTICE
           VALIDATE_JAVA: true
           JAVA_FILE_NAME: checkstyle.xml
 
