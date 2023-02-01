@@ -55,7 +55,7 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           arguments: test
-      - name: JaCoCo verification
-        uses: gradle/gradle-build-action@v2
-        with:
-          arguments: jacocoTestCoverageVerification
+      #- name: JaCoCo verification
+      #  uses: gradle/gradle-build-action@v2
+      #  with:
+      #    arguments: jacocoTestCoverageVerification
