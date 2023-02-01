@@ -1,0 +1,63 @@
+name: Java CI
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, labeled, unlabeled]
+
+    branches: [main]
+
+    push:
+      branches: [dev]
+
+  workflow_dispatch:
+
+jobs:
+
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download repo content
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: ${{ github.head_ref }}
+      - name: Super-Linter
+        #https://github.com/github/super-linter
+        uses: github/super-linter/slim@latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEFAULT_BRANCH: ${{ github.base_ref }}
+          VALIDATE_ALL_CODEBASE: false
+          LINTER_RULES_PATH: .github/workflows
+          LOG_LEVEL: WARN
+          VALIDATE_JAVA: true
+          JAVA_FILE_NAME: checkstyle.xml
+
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download repo content
+        uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          cache: 'gradle'
+          distribution: 'adopt'
+      - name: Validate Gradle wrapper
+        uses: gradle/wrapper-validation-action@v1
+      - name: Build with Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: build -x test
+      - name: Setup and execute Gradle 'test' task
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: test
+      - name: JaCoCo verification
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: jacocoTestCoverageVerification
+          build-root-directory: HotelHub
+
