@@ -51,15 +51,11 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           arguments: build -x test
-          build-root-directory: .
       - name: Setup and execute Gradle 'test' task
         uses: gradle/gradle-build-action@v2
         with:
           arguments: test
-          build-root-directory: .
       - name: JaCoCo verification
         uses: gradle/gradle-build-action@v2
         with:
           arguments: jacocoTestCoverageVerification
-          build-root-directory: .
-
