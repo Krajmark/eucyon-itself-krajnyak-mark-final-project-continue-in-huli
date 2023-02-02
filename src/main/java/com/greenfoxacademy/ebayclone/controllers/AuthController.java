@@ -1,7 +1,7 @@
 package com.greenfoxacademy.ebayclone.controllers;
 
-import com.greenfoxacademy.ebayclone.dtos.user.TokenDTO;
-import com.greenfoxacademy.ebayclone.dtos.user.UserDTO;
+import com.greenfoxacademy.ebayclone.dtos.TokenDTO;
+import com.greenfoxacademy.ebayclone.dtos.UserDTO;
 import com.greenfoxacademy.ebayclone.security.JwtProviderService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
