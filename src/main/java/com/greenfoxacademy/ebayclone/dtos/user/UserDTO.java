@@ -1,4 +1,4 @@
-package com.greenfoxacademy.ebayclone.dtos;
+package com.greenfoxacademy.ebayclone.dtos.user;
 
 public record UserDTO(
         String username,

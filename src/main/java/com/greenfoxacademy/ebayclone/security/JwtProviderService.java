@@ -1,6 +1,6 @@
 package com.greenfoxacademy.ebayclone.security;
 
-import com.greenfoxacademy.ebayclone.dtos.UserDTO;
+import com.greenfoxacademy.ebayclone.dtos.user.UserDTO;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
