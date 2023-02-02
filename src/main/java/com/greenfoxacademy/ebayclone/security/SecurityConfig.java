@@ -37,7 +37,7 @@ import java.util.UUID;
 public class SecurityConfig {
 
     private static final String[] SECURE_LIST = {
-        "/health/check"
+
     };
 
     private final RSAPublicKey publicKey;
