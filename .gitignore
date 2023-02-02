@@ -1,11 +1,15 @@
 # wsl
 .last_update
+
 # General
 *.log
 *.bak
 *.tmp
 logs
 donotupload
+
+# JWT
+app.*_key
 
 # JetBrains
 cmake-build-*/
