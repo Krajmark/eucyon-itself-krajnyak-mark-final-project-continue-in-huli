@@ -22,7 +22,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
 
-        return new org.springframework.security.core.userdetails.User(
+        return new UserDetailsImpl(
                 "admin",
                 this.passwordEncoder.encode("asdasd"),
                 // Needed to add "ROLE_" because the sec context automatically ads it when going through the filterChain method
