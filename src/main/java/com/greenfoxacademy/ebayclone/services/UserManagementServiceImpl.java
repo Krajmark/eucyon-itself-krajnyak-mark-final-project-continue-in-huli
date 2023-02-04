@@ -63,7 +63,7 @@ public class UserManagementServiceImpl implements UserManagementService {
         this.userRepo.save(new Buyer(userDTO.getUsername(), userDTO.getPassword()));
     }
 
-    private void handleBindingResult(BindingResult bindingResult) {
+    private void handleBindingResult(BindingResult bindingResult) throws ValidationException {
         if (bindingResult.hasErrors()) {
             var asd = bindingResult.getFieldErrors().stream()
                     .map(DefaultMessageSourceResolvable::getDefaultMessage)
