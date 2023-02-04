@@ -12,14 +12,12 @@ import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 
 @Service
 public class UserManagementServiceImpl implements UserManagementService {
 
     private final UserRepo userRepo;
     private final PasswordEncoder passwordEncoder;
-
     private final JwtProviderService jwtProviderService;
 
     public UserManagementServiceImpl(
@@ -56,12 +54,15 @@ public class UserManagementServiceImpl implements UserManagementService {
     private void createAdmin(UserDTO userDTO) {
         this.userRepo.save(new Admin(userDTO.getUsername(), userDTO.getPassword()));
     }
+
     private void createSeller(UserDTO userDTO) {
         this.userRepo.save(new Seller(userDTO.getUsername(), userDTO.getPassword()));
     }
+
     private void createBuyer(UserDTO userDTO) {
         this.userRepo.save(new Buyer(userDTO.getUsername(), userDTO.getPassword()));
     }
+
     private void handleBindingResult(BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             var asd = bindingResult.getFieldErrors().stream()
