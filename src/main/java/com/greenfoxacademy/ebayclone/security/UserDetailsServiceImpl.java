@@ -1,12 +1,6 @@
 package com.greenfoxacademy.ebayclone.security;
 
-import com.greenfoxacademy.ebayclone.models.Admin;
-import com.greenfoxacademy.ebayclone.models.Buyer;
-import com.greenfoxacademy.ebayclone.models.Seller;
 import com.greenfoxacademy.ebayclone.models.User;
-import com.greenfoxacademy.ebayclone.repositories.AdminRepo;
-import com.greenfoxacademy.ebayclone.repositories.BuyerRepo;
-import com.greenfoxacademy.ebayclone.repositories.SellerRepo;
 import com.greenfoxacademy.ebayclone.repositories.UserRepo;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
