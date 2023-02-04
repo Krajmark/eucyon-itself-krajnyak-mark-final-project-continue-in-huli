@@ -24,7 +24,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> userCandidate = this.userRepo.findUserByUsername(username);
-        if (userCandidate.isEmpty()) throw new UsernameNotFoundException("No such user!");
+        if (userCandidate.isEmpty()) {
+            throw new UsernameNotFoundException("No such user!");
+        }
         return new UserDetailsImpl(
                 userCandidate.get().getUsername(),
                 userCandidate.get().getPassword(),
