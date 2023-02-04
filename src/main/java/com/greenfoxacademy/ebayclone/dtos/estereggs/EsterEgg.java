@@ -6,6 +6,8 @@ public class EsterEgg {
     private String[] credits = {
             "Krajnyák Márk",
             "ASDASD",
+            "@GreenFoxAcademy",
+            "https://www.greenfoxacademy.com/"
     };
     private String[] advice = {
             "Also if u are using chrome and NOT using this, please do it NOW!!!",
