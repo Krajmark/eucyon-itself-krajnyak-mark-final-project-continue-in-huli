@@ -2,8 +2,9 @@ package com.greenfoxacademy.ebayclone.models;
 
 import jakarta.persistence.*;
 
-@MappedSuperclass
-public abstract class User {
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id", nullable = false)
