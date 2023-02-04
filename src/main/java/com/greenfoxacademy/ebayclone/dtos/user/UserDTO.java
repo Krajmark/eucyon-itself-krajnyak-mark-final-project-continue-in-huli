@@ -1,7 +1,18 @@
 package com.greenfoxacademy.ebayclone.dtos.user;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 public class UserDTO {
+    @Min(value = 6, message = "Username have to be longer than 5")
+    @NotBlank(message = "Username cannot be blank")
+    @NotNull(message = "Username cannot be null")
     private String username;
+    @Min(value = 6, message = "Password have to be longer than 5")
+    @NotBlank(message = "Password cannot be blank")
+    @NotNull(message = "Password cannot be null")
     private String password;
 
     public UserDTO(String username, String password) {
