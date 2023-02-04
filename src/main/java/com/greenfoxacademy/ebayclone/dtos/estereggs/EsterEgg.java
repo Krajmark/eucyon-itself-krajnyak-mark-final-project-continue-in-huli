@@ -7,11 +7,16 @@ public class EsterEgg {
             "Krajnyák Márk",
             "ASDASD",
     };
+    private String[] advice = {
+            "Also if u are using chrome and NOT using this, please do it NOW!!!",
+            "https://chrome.google.com/webstore/detail/json-viewer/gbmdgpbipfallnflgajpaliibnhdgobh"
+    };
 
-    public EsterEgg(String hi, String welcome, String[] credits) {
+    public EsterEgg(String hi, String welcome, String[] credits, String[] advice) {
         this.hi = hi;
         this.welcome = welcome;
         this.credits = credits;
+        this.advice = advice;
     }
 
     public EsterEgg() {
@@ -39,5 +44,13 @@ public class EsterEgg {
 
     public void setCredits(String[] credits) {
         this.credits = credits;
+    }
+
+    public String[] getAdvice() {
+        return advice;
+    }
+
+    public void setAdvice(String[] advice) {
+        this.advice = advice;
     }
 }
