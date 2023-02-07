@@ -1,6 +1,7 @@
 package com.greenfoxacademy.ebayclone.services;
 
 import com.greenfoxacademy.ebayclone.dtos.user.UserDTO;
+import com.greenfoxacademy.ebayclone.exeptions.user.PasswordInvalidException;
 import com.greenfoxacademy.ebayclone.exeptions.user.UsernameAlreadyInUseException;
 import com.greenfoxacademy.ebayclone.models.Admin;
 import com.greenfoxacademy.ebayclone.models.Buyer;
@@ -31,7 +32,7 @@ public class UserManagementServiceImpl implements UserManagementService {
     }
 
     @Override
-    public String processLoginRequest(UserDTO userDTO, BindingResult bindingResult) {
+    public String processLoginRequest(UserDTO userDTO, BindingResult bindingResult) throws PasswordInvalidException {
         handleBindingResult(bindingResult);
         return this.jwtProviderService.generateTokenByUserLoginRequest(userDTO);
     }
