@@ -3,6 +3,7 @@ package com.greenfoxacademy.ebayclone.exeptions;
 import com.greenfoxacademy.ebayclone.dtos.MessageDTO;
 import com.greenfoxacademy.ebayclone.exeptions.user.PasswordInvalidException;
 import com.greenfoxacademy.ebayclone.exeptions.user.UsernameAlreadyInUseException;
+import jakarta.validation.ValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -37,6 +38,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     ) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(
                 new MessageDTO(usernameAlreadyInUseException.getMessage())
+        );
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<?> handleValidationException(
+            ValidationException validationException
+    ) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                new MessageDTO(validationException.getMessage())
         );
     }
 }
