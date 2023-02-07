@@ -13,6 +13,7 @@ public class HealthController {
         esterEgg.setWelcome("Welcome to our health check page, enjoy ;)");
         return ResponseEntity.ok(esterEgg);
     }
+
     @GetMapping("/")
     public ResponseEntity<?> indexPage() {
         return ResponseEntity.ok(new EsterEgg());
