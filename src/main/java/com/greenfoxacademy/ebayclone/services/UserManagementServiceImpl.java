@@ -68,7 +68,7 @@ public class UserManagementServiceImpl implements UserManagementService {
         if (bindingResult.hasErrors()) {
             var asd = bindingResult.getFieldErrors().stream()
                     .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                    .reduce("", (string, snippet) -> string + System.lineSeparator() + snippet);
+                    .reduce("", (string, snippet) -> string + ", " + snippet);
             throw new ValidationException(
                     asd
             );
