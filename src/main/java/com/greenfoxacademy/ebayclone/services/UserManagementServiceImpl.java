@@ -14,6 +14,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
+import java.util.Objects;
+
 @Service
 public class UserManagementServiceImpl implements UserManagementService {
 
@@ -68,7 +70,7 @@ public class UserManagementServiceImpl implements UserManagementService {
         if (bindingResult.hasErrors()) {
             var asd = bindingResult.getFieldErrors().stream()
                     .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                    .reduce("", (string, snippet) -> string + ", " + snippet);
+                    .reduce("", (string, snippet) -> string + (string.isBlank() || Objects.requireNonNull(snippet).isBlank() ? "" : ", ") + snippet);
             throw new ValidationException(
                     asd
             );
