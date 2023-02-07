@@ -3,6 +3,7 @@ package com.greenfoxacademy.ebayclone.controllers;
 
 import com.greenfoxacademy.ebayclone.dtos.user.TokenDTO;
 import com.greenfoxacademy.ebayclone.dtos.user.UserDTO;
+import com.greenfoxacademy.ebayclone.exeptions.user.PasswordInvalidException;
 import com.greenfoxacademy.ebayclone.exeptions.user.UsernameAlreadyInUseException;
 import com.greenfoxacademy.ebayclone.services.UserManagementService;
 import jakarta.validation.Valid;
@@ -29,7 +30,7 @@ public class AuthController {
     public ResponseEntity<TokenDTO> sendToken(
             @Valid @RequestBody UserDTO userDTO,
             BindingResult bindingResult
-    ) {
+    ) throws PasswordInvalidException {
         return ResponseEntity.ok(new TokenDTO(this.userManagementService.processLoginRequest(userDTO, bindingResult)));
     }
 

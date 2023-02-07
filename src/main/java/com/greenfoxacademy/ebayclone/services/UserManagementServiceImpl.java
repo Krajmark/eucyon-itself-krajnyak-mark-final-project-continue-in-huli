@@ -1,6 +1,7 @@
 package com.greenfoxacademy.ebayclone.services;
 
 import com.greenfoxacademy.ebayclone.dtos.user.UserDTO;
+import com.greenfoxacademy.ebayclone.exeptions.user.PasswordInvalidException;
 import com.greenfoxacademy.ebayclone.exeptions.user.UsernameAlreadyInUseException;
 import com.greenfoxacademy.ebayclone.models.Admin;
 import com.greenfoxacademy.ebayclone.models.Buyer;
@@ -12,6 +13,8 @@ import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
+
+import java.util.Objects;
 
 @Service
 public class UserManagementServiceImpl implements UserManagementService {
@@ -31,7 +34,7 @@ public class UserManagementServiceImpl implements UserManagementService {
     }
 
     @Override
-    public String processLoginRequest(UserDTO userDTO, BindingResult bindingResult) {
+    public String processLoginRequest(UserDTO userDTO, BindingResult bindingResult) throws PasswordInvalidException {
         handleBindingResult(bindingResult);
         return this.jwtProviderService.generateTokenByUserLoginRequest(userDTO);
     }
@@ -67,7 +70,7 @@ public class UserManagementServiceImpl implements UserManagementService {
         if (bindingResult.hasErrors()) {
             var asd = bindingResult.getFieldErrors().stream()
                     .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                    .reduce("", (string, snippet) -> string + System.lineSeparator() + snippet);
+                    .reduce("", (string, snippet) -> string + (string.isBlank() || Objects.requireNonNull(snippet).isBlank() ? "" : ", ") + snippet);
             throw new ValidationException(
                     asd
             );

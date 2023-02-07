@@ -1,6 +1,7 @@
 package com.greenfoxacademy.ebayclone.security;
 
 import com.greenfoxacademy.ebayclone.dtos.user.UserDTO;
+import com.greenfoxacademy.ebayclone.exeptions.user.PasswordInvalidException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,12 +26,12 @@ public class JwtProviderService {
         this.userDetailsService = userDetailsService;
     }
 
-    public String generateTokenByUserLoginRequest(UserDTO userDTO) throws UsernameNotFoundException {
+    public String generateTokenByUserLoginRequest(UserDTO userDTO) throws UsernameNotFoundException, PasswordInvalidException {
         Instant now = Instant.now();
         long expiry = (24 * 60 * 60);
         var user = this.userDetailsService.loadUserByUsername(userDTO.getUsername());
         if (!this.passwordEncoder.matches(userDTO.getPassword(), user.getPassword())) {
-            throw new UsernameNotFoundException("Invalid username or password.");
+            throw new PasswordInvalidException("Invalid username or password.");
         }
         String scope = user.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
