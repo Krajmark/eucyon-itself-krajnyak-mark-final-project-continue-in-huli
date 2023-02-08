@@ -1,7 +1,7 @@
 package com.greenfoxacademy.ebayclone.controllers;
 
 
-import com.greenfoxacademy.ebayclone.dtos.user.TokenDTO;
+import com.greenfoxacademy.ebayclone.dtos.user.LoginResponseDTO;
 import com.greenfoxacademy.ebayclone.dtos.user.UserDTO;
 import com.greenfoxacademy.ebayclone.exeptions.user.PasswordInvalidException;
 import com.greenfoxacademy.ebayclone.exeptions.user.UsernameAlreadyInUseException;
@@ -27,11 +27,11 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<TokenDTO> sendToken(
+    public ResponseEntity<LoginResponseDTO> sendToken(
             @Valid @RequestBody UserDTO userDTO,
             BindingResult bindingResult
     ) throws PasswordInvalidException {
-        return ResponseEntity.ok(new TokenDTO(this.userManagementService.processLoginRequest(userDTO, bindingResult)));
+        return ResponseEntity.ok(this.userManagementService.processLoginRequest(userDTO, bindingResult));
     }
 
     @PostMapping("/register/{userType}")

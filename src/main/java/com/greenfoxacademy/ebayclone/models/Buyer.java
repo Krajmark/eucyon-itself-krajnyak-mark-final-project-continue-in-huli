@@ -7,8 +7,8 @@ public class Buyer extends User {
     public Buyer() {
     }
 
-    public Buyer(String username, String password) {
-        super(username, password);
+    public Buyer(String username, String password, Integer balance) {
+        super(username, password, balance);
     }
 
 }

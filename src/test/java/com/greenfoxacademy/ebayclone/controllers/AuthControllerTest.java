@@ -1,5 +1,6 @@
 package com.greenfoxacademy.ebayclone.controllers;
 
+import com.greenfoxacademy.ebayclone.dtos.user.LoginResponseDTO;
 import com.greenfoxacademy.ebayclone.exeptions.user.PasswordInvalidException;
 import com.greenfoxacademy.ebayclone.exeptions.user.UsernameAlreadyInUseException;
 import com.greenfoxacademy.ebayclone.services.UserManagementService;
@@ -37,7 +38,8 @@ class AuthControllerTest {
 
     @Test
     void sendTokenShouldSucceedWith200AndCorrectToken() throws Exception {
-        when(this.userManagementService.processLoginRequest(any(), any())).thenReturn("asd");
+        when(this.userManagementService.processLoginRequest(any(), any()))
+                .thenReturn(new LoginResponseDTO("asd", 0));
         this.mockMvc.perform(post("/auth/login").content("""
                                 {
                                     "username": "admin123",
@@ -49,7 +51,8 @@ class AuthControllerTest {
                 .andExpect(content().json(
                         """
                                 {
-                                    "token": "asd"
+                                    "token": "asd",
+                                    "balance": 0
                                 }
                                 """
                 ));

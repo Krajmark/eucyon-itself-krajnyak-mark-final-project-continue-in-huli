@@ -46,7 +46,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             ValidationException validationException
     ) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                new MessageDTO(validationException.getMessage())
+                new MessageDTO(validationException.getMessage().split("/:/"))
         );
     }
 
