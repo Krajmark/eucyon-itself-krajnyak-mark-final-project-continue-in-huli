@@ -49,4 +49,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 new MessageDTO(validationException.getMessage())
         );
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<?> handleIllegalArgumentException(
+            IllegalArgumentException illegalArgumentException
+    ) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                new MessageDTO(illegalArgumentException.getMessage())
+        );
+    }
 }

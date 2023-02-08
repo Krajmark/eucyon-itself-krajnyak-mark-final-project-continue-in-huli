@@ -50,7 +50,7 @@ public class UserManagementServiceImpl implements UserManagementService {
             case "admin" -> createAdmin(userDTO);
             case "seller" -> createSeller(userDTO);
             case "buyer" -> createBuyer(userDTO);
-            default -> throw new IllegalArgumentException();
+            default -> throw new IllegalArgumentException("Not a supported user-type!");
         }
     }
 

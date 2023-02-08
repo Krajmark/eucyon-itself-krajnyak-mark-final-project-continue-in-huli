@@ -6,8 +6,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -18,14 +20,14 @@ class HealthControllerTest {
 
     @Test
     void healthCheck() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/health/check")).andExpect(MockMvcResultMatchers.status().isOk());
+        mockMvc.perform(get("/health/check")).andExpect(status().isOk());
     }
 
     @Test
     void indexPage() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().json(
+        mockMvc.perform(get("/"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(
                         """
                                 {
                                   "hi": "Hi!",
