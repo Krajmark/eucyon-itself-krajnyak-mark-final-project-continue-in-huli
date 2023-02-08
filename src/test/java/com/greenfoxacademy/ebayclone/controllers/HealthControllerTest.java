@@ -20,4 +20,28 @@ class HealthControllerTest {
     void healthCheck() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/health/check")).andExpect(MockMvcResultMatchers.status().isOk());
     }
+
+    @Test
+    void indexPage() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json(
+                        """
+                                {
+                                  "hi": "Hi!",
+                                  "welcome": "Welcome to this secret page!",
+                                  "credits": [
+                                    "Krajnyák Márk",
+                                    "ASDASD",
+                                    "@GreenFoxAcademy",
+                                    "https://www.greenfoxacademy.com/"
+                                  ],
+                                  "advice": [
+                                    "Also if u are using chrome and NOT using this, please do it NOW!!!",
+                                    "https://chrome.google.com/webstore/detail/json-viewer/gbmdgpbipfallnflgajpaliibnhdgobh"
+                                  ]
+                                }
+                                """
+                ));
+    }
 }
