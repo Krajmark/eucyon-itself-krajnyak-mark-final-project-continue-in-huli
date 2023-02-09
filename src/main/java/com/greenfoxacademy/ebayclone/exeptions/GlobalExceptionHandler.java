@@ -18,9 +18,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<?> handleUsernameNotFoundException(
             UsernameNotFoundException usernameNotFoundException
     ) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                new MessageDTO(usernameNotFoundException.getMessage())
-        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageDTO(usernameNotFoundException.getMessage()));
     }
 
     @ExceptionHandler(PasswordInvalidException.class)
@@ -46,7 +44,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             ValidationException validationException
     ) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                new MessageDTO(validationException.getMessage())
+                new MessageDTO(validationException.getMessage().split("/:/"))
+        );
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<?> handleIllegalArgumentException(
+            IllegalArgumentException illegalArgumentException
+    ) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                new MessageDTO(illegalArgumentException.getMessage())
         );
     }
 }

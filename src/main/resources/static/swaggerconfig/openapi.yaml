@@ -1,0 +1,176 @@
+openapi: 3.0.0
+info:
+  version: 'TBD'
+  title: 'E-Bay Clone Swagger UI - with OpenAPI 3.0'
+  description: 'Having some fun with Springboot...'
+  contact:
+    name: KrajnyakMark
+    url: https://ebayclone-production.up.railway.app/
+    email: asdasd@asd.io
+externalDocs:
+  description: Check out the main website
+  url: https://ebayclone-production.up.railway.app/
+servers:
+  - url: http://localhost:8080
+  - url: https://ebayclone-production.up.railway.app
+tags:
+  - name: main
+    description: Basic stuff...
+  #  - name: user
+  #    description: Operations with users
+  #    externalDocs:
+  #      description: Register as a customer on our website
+  #      url: https://ebayclone-production.up.railway.app/auth/register/buyer
+  - name: auth
+    description: Authentication related endpoints
+paths:
+  /index:
+    get:
+      tags:
+        - main
+      summary: Some info...
+      description: Will give back some about info...
+      operationId: mainStuff
+      responses:
+        200:
+          description: Successfully loaded hom page
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EsterEgg'
+  /health/check:
+    get:
+      tags:
+        - main
+      summary: Check the health of the application
+      operationId: health
+      responses:
+        200:
+          description: Successful healthcheck
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EsterEgg'
+  /auth/login:
+    post:
+      tags:
+        - auth
+      summary: Login to the application
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDTO'
+
+      responses:
+        200:
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponseDTO'
+        404:
+          description: Login failed due to unidentifiable user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageDTO'
+        403:
+          description: Login failed due to wrong credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageDTO'
+        400:
+          description: Login failed due to invalid request body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageDTO'
+  /auth/register/{usertype}:
+    post:
+      tags:
+        - auth
+      summary: Register to the application
+      operationId: register
+      parameters:
+        - name: usertype
+          required: true
+          in: path
+          description: Path variable determining the registration's type
+          schema:
+            type: string
+            default: admin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDTO'
+      responses:
+        201:
+          description: Successful registration
+        406:
+          description: Registration failed due to username already in use
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageDTO'
+        400:
+          description: Registration failed due to invalid request body or usertype
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageDTO'
+
+components:
+  schemas:
+    EsterEgg:
+      type: object
+      properties:
+        hi:
+          type: string
+        welcome:
+          type: string
+        credits:
+          type: array
+          items:
+            type: string
+        advice:
+          type: array
+          items:
+            type: string
+    UserDTO:
+      type: object
+      properties:
+        username:
+          type: string
+          required: true
+          default: admin123
+        password:
+          type: string
+          required: true
+          default: asdasd
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          default: I am a JWT
+        balance:
+          type: number
+    MessageDTO:
+      type: object
+      properties:
+        message:
+          type: array
+          items:
+            type: string
+
+  securitySchemes:
+    JWT_Auth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

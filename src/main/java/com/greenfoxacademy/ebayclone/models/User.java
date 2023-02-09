@@ -17,21 +17,31 @@ public class User {
     private Integer id;
     private String username;
     private String password;
+    private Integer balance;
 
     public User() {
 
     }
 
-    public User(String username, String password) {
+    public User(String username, String password, Integer balance) {
         this.username = username;
         this.password = password;
+        this.balance = balance;
     }
 
-    public int getId() {
+    public Integer getBalance() {
+        return balance;
+    }
+
+    public void setBalance(Integer balance) {
+        this.balance = balance;
+    }
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

@@ -14,7 +14,7 @@ public class HealthController {
         return ResponseEntity.ok(esterEgg);
     }
 
-    @GetMapping("/")
+    @GetMapping({"/", "/index"})
     public ResponseEntity<?> indexPage() {
         return ResponseEntity.ok(new EsterEgg());
     }

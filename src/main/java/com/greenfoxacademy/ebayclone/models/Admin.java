@@ -8,6 +8,6 @@ public class Admin extends User {
     }
 
     public Admin(String username, String password) {
-        super(username, password);
+        super(username, password, Integer.MAX_VALUE);
     }
 }

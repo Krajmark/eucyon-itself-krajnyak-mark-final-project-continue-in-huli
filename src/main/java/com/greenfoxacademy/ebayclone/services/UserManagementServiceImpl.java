@@ -1,5 +1,6 @@
 package com.greenfoxacademy.ebayclone.services;
 
+import com.greenfoxacademy.ebayclone.dtos.user.LoginResponseDTO;
 import com.greenfoxacademy.ebayclone.dtos.user.UserDTO;
 import com.greenfoxacademy.ebayclone.exeptions.user.PasswordInvalidException;
 import com.greenfoxacademy.ebayclone.exeptions.user.UsernameAlreadyInUseException;
@@ -34,9 +35,11 @@ public class UserManagementServiceImpl implements UserManagementService {
     }
 
     @Override
-    public String processLoginRequest(UserDTO userDTO, BindingResult bindingResult) throws PasswordInvalidException {
+    public LoginResponseDTO processLoginRequest(UserDTO userDTO, BindingResult bindingResult) throws PasswordInvalidException {
         handleBindingResult(bindingResult);
-        return this.jwtProviderService.generateTokenByUserLoginRequest(userDTO);
+        String token = this.jwtProviderService.generateTokenByUserLoginRequest(userDTO);
+        Integer balance = this.userRepo.findUserByUsername(userDTO.getUsername()).get().getBalance();
+        return new LoginResponseDTO(token, balance);
     }
 
     @Override
@@ -50,7 +53,7 @@ public class UserManagementServiceImpl implements UserManagementService {
             case "admin" -> createAdmin(userDTO);
             case "seller" -> createSeller(userDTO);
             case "buyer" -> createBuyer(userDTO);
-            default -> throw new IllegalArgumentException();
+            default -> throw new IllegalArgumentException("Not a supported user-type!");
         }
     }
 
@@ -59,18 +62,18 @@ public class UserManagementServiceImpl implements UserManagementService {
     }
 
     private void createSeller(UserDTO userDTO) {
-        this.userRepo.save(new Seller(userDTO.getUsername(), userDTO.getPassword()));
+        this.userRepo.save(new Seller(userDTO.getUsername(), userDTO.getPassword(), 0));
     }
 
     private void createBuyer(UserDTO userDTO) {
-        this.userRepo.save(new Buyer(userDTO.getUsername(), userDTO.getPassword()));
+        this.userRepo.save(new Buyer(userDTO.getUsername(), userDTO.getPassword(), 0));
     }
 
     private void handleBindingResult(BindingResult bindingResult) throws ValidationException {
         if (bindingResult.hasErrors()) {
             var asd = bindingResult.getFieldErrors().stream()
                     .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                    .reduce("", (string, snippet) -> string + (string.isBlank() || Objects.requireNonNull(snippet).isBlank() ? "" : ", ") + snippet);
+                    .reduce("", (string, snippet) -> string + (string.isBlank() || Objects.requireNonNull(snippet).isBlank() ? "" : "/:/") + snippet);
             throw new ValidationException(
                     asd
             );
