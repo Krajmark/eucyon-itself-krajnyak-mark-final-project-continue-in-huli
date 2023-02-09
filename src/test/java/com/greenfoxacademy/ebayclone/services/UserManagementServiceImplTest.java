@@ -37,6 +37,7 @@ class UserManagementServiceImplTest {
     PasswordEncoder passwordEncoder;
     UserManagementServiceImpl userManagementService;
     UserDTO userDTO;
+
     @BeforeEach
     public void setup() {
         this.userDTO = new UserDTO("testName", "testPassword");
