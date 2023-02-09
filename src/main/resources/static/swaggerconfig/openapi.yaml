@@ -113,6 +113,10 @@ paths:
           schema:
             type: string
             default: admin
+            enum:
+              - admin
+              - seller
+              - buyer
       requestBody:
         required: true
         content:
