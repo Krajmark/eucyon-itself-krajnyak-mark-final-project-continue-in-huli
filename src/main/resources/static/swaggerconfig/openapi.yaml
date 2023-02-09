@@ -1,0 +1,64 @@
+openapi: 3.0.0
+info:
+  version: 'TBD'
+  title: 'E-Bay Clone Swagger UI - with OpenAPI 3.0'
+  description: 'Having some fun with Springboot...'
+  contact:
+    name: KrajnyakMark
+    url: https://ebayclone-production.up.railway.app/
+    email: asdasd@asd.io
+externalDocs:
+  description: Check out the main website
+  url: https://ebayclone-production.up.railway.app/
+servers:
+  - url: http://localhost:8080
+  - url: https://ebayclone-production.up.railway.app
+tags:
+  - name: main
+    description: Basic stuff...
+  - name: user
+    description: Operations with users
+    externalDocs:
+      description: Register as a costumer on our website
+      url: https://ebayclone-production.up.railway.app/auth/register/buyer
+  - name: auth
+    description: User authentication
+paths:
+  /index:
+    get:
+      tags:
+        - main
+      summary: Some info
+      description: Will give back some about info...
+      operationId: mainStuff
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schemas/EsterEgg'
+components:
+  schemas:
+    EsterEgg:
+      type: object
+      properties:
+        hi:
+          type: string
+        welcome:
+          type: string
+        credits:
+          type: array
+          items:
+            type: string
+        advice:
+          type: array
+          items:
+            type: string
+  securitySchemes:
+    JWT_Auth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
