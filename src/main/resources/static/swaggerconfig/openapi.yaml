@@ -16,13 +16,13 @@ servers:
 tags:
   - name: main
     description: Basic stuff...
-#  - name: user
-#    description: Operations with users
-#    externalDocs:
-#      description: Register as a customer on our website
-#      url: https://ebayclone-production.up.railway.app/auth/register/buyer
+  #  - name: user
+  #    description: Operations with users
+  #    externalDocs:
+  #      description: Register as a customer on our website
+  #      url: https://ebayclone-production.up.railway.app/auth/register/buyer
   - name: auth
-    description: User authentication
+    description: Authentication related endpoints
 paths:
   /index:
     get:
@@ -37,7 +37,7 @@ paths:
           content:
             application/json:
               schema:
-                  $ref: '#/components/schemas/EsterEgg'
+                $ref: '#/components/schemas/EsterEgg'
   /health/check:
     get:
       tags:
@@ -55,13 +55,14 @@ paths:
     post:
       tags:
         - auth
-      summary: Authentication related endpoints
+      summary: Login to the application
       operationId: login
       requestBody:
+        required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/LoginRequest'
+              $ref: '#/components/schemas/UserDTO'
 
       responses:
         200:
@@ -69,9 +70,61 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LoginResponse'
+                $ref: '#/components/schemas/LoginResponseDTO'
         404:
-          description:
+          description: Login failed due to unidentifiable user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageDTO'
+        403:
+          description: Login failed due to wrong credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageDTO'
+        400:
+          description: Login failed due to invalid request body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageDTO'
+  /auth/register/{usertype}:
+    post:
+      tags:
+        - auth
+      summary: Register to the application
+      operationId: register
+      parameters:
+        - name: usertype
+          required: true
+          in: path
+          description: Path variable determining the registration's type
+          schema:
+            type: string
+            default: admin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDTO'
+      responses:
+        201:
+          description: Successful registration
+        406:
+          description: Registration failed due to username already in use
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageDTO'
+        400:
+          description: Registration failed due to invalid request body or usertype
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageDTO'
+
 components:
   schemas:
     EsterEgg:
@@ -89,7 +142,7 @@ components:
           type: array
           items:
             type: string
-    LoginRequest:
+    UserDTO:
       type: object
       properties:
         username:
@@ -108,6 +161,14 @@ components:
           default: I am a JWT
         balance:
           type: number
+    MessageDTO:
+      type: object
+      properties:
+        message:
+          type: array
+          items:
+            type: string
+
   securitySchemes:
     JWT_Auth:
       type: http
