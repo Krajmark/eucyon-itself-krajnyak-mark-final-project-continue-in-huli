@@ -4,7 +4,6 @@ import com.greenfoxacademy.ebayclone.dtos.MessageDTO;
 import com.greenfoxacademy.ebayclone.exeptions.user.PasswordInvalidException;
 import com.greenfoxacademy.ebayclone.exeptions.user.UsernameAlreadyInUseException;
 import jakarta.validation.ValidationException;
-import org.springframework.boot.web.reactive.error.DefaultErrorAttributes;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
