@@ -20,9 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
     private final UserManagementService userManagementService;
 
-    public AuthController(
-            UserManagementService userManagementService
-    ) {
+    public AuthController(UserManagementService userManagementService) {
         this.userManagementService = userManagementService;
     }
 

@@ -16,11 +16,11 @@ servers:
 tags:
   - name: main
     description: Basic stuff...
-  - name: user
-    description: Operations with users
-    externalDocs:
-      description: Register as a costumer on our website
-      url: https://ebayclone-production.up.railway.app/auth/register/buyer
+#  - name: user
+#    description: Operations with users
+#    externalDocs:
+#      description: Register as a customer on our website
+#      url: https://ebayclone-production.up.railway.app/auth/register/buyer
   - name: auth
     description: User authentication
 paths:
@@ -28,18 +28,50 @@ paths:
     get:
       tags:
         - main
-      summary: Some info
+      summary: Some info...
       description: Will give back some about info...
       operationId: mainStuff
       responses:
-        '200':
-          description: successful operation
+        200:
+          description: Successfully loaded hom page
           content:
             application/json:
               schema:
-                type: object
-                items:
                   $ref: '#/components/schemas/EsterEgg'
+  /health/check:
+    get:
+      tags:
+        - main
+      summary: Check the health of the application
+      operationId: health
+      responses:
+        200:
+          description: Successful healthcheck
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EsterEgg'
+  /auth/login:
+    post:
+      tags:
+        - auth
+      summary: Authentication related endpoints
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+
+      responses:
+        200:
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        404:
+          description:
 components:
   schemas:
     EsterEgg:
@@ -57,6 +89,25 @@ components:
           type: array
           items:
             type: string
+    LoginRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          required: true
+          default: admin123
+        password:
+          type: string
+          required: true
+          default: asdasd
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          default: I am a JWT
+        balance:
+          type: number
   securitySchemes:
     JWT_Auth:
       type: http
