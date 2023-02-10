@@ -40,7 +40,7 @@ public class ProductManagementServiceImpl implements ProductManagementService {
         Seller seller = sellerOptional.get();
         Product product = ProductMapper.INSTANCE.productCreationDtoToProduct(productCreationDTO);
         product.addAsSeller(seller);
-        this.productRepo.save(product);
+        product = this.productRepo.save(product);
         this.sellerRepo.save(seller);
         return ProductMapper.INSTANCE.productToProductDetailsDto(product);
     }
