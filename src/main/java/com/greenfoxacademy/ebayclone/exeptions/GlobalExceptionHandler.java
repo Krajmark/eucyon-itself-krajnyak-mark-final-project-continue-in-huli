@@ -1,6 +1,7 @@
 package com.greenfoxacademy.ebayclone.exeptions;
 
 import com.greenfoxacademy.ebayclone.dtos.MessageDTO;
+import com.greenfoxacademy.ebayclone.exeptions.product.ProductNotFoundException;
 import com.greenfoxacademy.ebayclone.exeptions.user.PasswordInvalidException;
 import com.greenfoxacademy.ebayclone.exeptions.user.UsernameAlreadyInUseException;
 import jakarta.validation.ValidationException;
@@ -14,15 +15,15 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(UsernameNotFoundException.class)
-    public ResponseEntity<?> handleUsernameNotFoundException(
-            UsernameNotFoundException usernameNotFoundException
+    @ExceptionHandler({UsernameNotFoundException.class, ProductNotFoundException.class})
+    public ResponseEntity<MessageDTO> handleUsernameNotFoundException(
+            Exception exception
     ) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageDTO(usernameNotFoundException.getMessage()));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageDTO(exception.getMessage()));
     }
 
     @ExceptionHandler(PasswordInvalidException.class)
-    public ResponseEntity<?> handlePasswordInvalidException(
+    public ResponseEntity<MessageDTO> handlePasswordInvalidException(
             PasswordInvalidException passwordInvalidException
     ) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
@@ -31,7 +32,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(UsernameAlreadyInUseException.class)
-    public ResponseEntity<?> handleUsernameAlreadyInUseException(
+    public ResponseEntity<MessageDTO> handleUsernameAlreadyInUseException(
             UsernameAlreadyInUseException usernameAlreadyInUseException
     ) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(
@@ -40,7 +41,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(ValidationException.class)
-    public ResponseEntity<?> handleValidationException(
+    public ResponseEntity<MessageDTO> handleValidationException(
             ValidationException validationException
     ) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
@@ -48,12 +49,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         );
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<?> handleIllegalArgumentException(
-            IllegalArgumentException illegalArgumentException
+    @ExceptionHandler({IllegalArgumentException.class, NumberFormatException.class})
+    public ResponseEntity<MessageDTO> handleIllegalArgumentAndNumberFormatExceptions(
+            Exception exception
     ) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                new MessageDTO(illegalArgumentException.getMessage())
+                new MessageDTO(exception.getMessage())
         );
     }
 }
