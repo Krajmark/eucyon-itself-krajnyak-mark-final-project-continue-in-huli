@@ -9,13 +9,9 @@ import com.greenfoxacademy.ebayclone.models.Buyer;
 import com.greenfoxacademy.ebayclone.models.Seller;
 import com.greenfoxacademy.ebayclone.repositories.UserRepo;
 import com.greenfoxacademy.ebayclone.security.JwtProviderService;
-import jakarta.validation.ValidationException;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
-
-import java.util.Objects;
 
 @Service
 public class UserManagementServiceImpl implements UserManagementService {
@@ -24,19 +20,22 @@ public class UserManagementServiceImpl implements UserManagementService {
     private final PasswordEncoder passwordEncoder;
     private final JwtProviderService jwtProviderService;
 
+    private final BindingResultHandlerService bindingResultHandlerService;
+
     public UserManagementServiceImpl(
             UserRepo userRepo,
             PasswordEncoder passwordEncoder,
-            JwtProviderService jwtProviderService
-    ) {
+            JwtProviderService jwtProviderService,
+            BindingResultHandlerService bindingResultHandlerService) {
         this.userRepo = userRepo;
         this.passwordEncoder = passwordEncoder;
         this.jwtProviderService = jwtProviderService;
+        this.bindingResultHandlerService = bindingResultHandlerService;
     }
 
     @Override
     public LoginResponseDTO processLoginRequest(UserDTO userDTO, BindingResult bindingResult) throws PasswordInvalidException {
-        handleBindingResult(bindingResult);
+        this.bindingResultHandlerService.handleBindingResult(bindingResult);
         String token = this.jwtProviderService.generateTokenByUserLoginRequest(userDTO);
         Integer balance = this.userRepo.findUserByUsername(userDTO.getUsername()).get().getBalance();
         return new LoginResponseDTO(token, balance);
@@ -44,7 +43,7 @@ public class UserManagementServiceImpl implements UserManagementService {
 
     @Override
     public void createNewUser(String userType, UserDTO userDTO, BindingResult bindingResult) throws UsernameAlreadyInUseException {
-        handleBindingResult(bindingResult);
+        this.bindingResultHandlerService.handleBindingResult(bindingResult);
         if (this.userRepo.existsByUsername(userDTO.getUsername())) {
             throw new UsernameAlreadyInUseException();
         }
@@ -67,16 +66,5 @@ public class UserManagementServiceImpl implements UserManagementService {
 
     private void createBuyer(UserDTO userDTO) {
         this.userRepo.save(new Buyer(userDTO.getUsername(), userDTO.getPassword(), 0));
-    }
-
-    private void handleBindingResult(BindingResult bindingResult) throws ValidationException {
-        if (bindingResult.hasErrors()) {
-            var asd = bindingResult.getFieldErrors().stream()
-                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                    .reduce("", (string, snippet) -> string + (string.isBlank() || Objects.requireNonNull(snippet).isBlank() ? "" : "/:/") + snippet);
-            throw new ValidationException(
-                    asd
-            );
-        }
     }
 }

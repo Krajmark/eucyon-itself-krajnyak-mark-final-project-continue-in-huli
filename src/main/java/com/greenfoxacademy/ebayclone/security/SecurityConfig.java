@@ -35,8 +35,12 @@ import java.util.UUID;
 public class SecurityConfig {
 
     private static final String[] SECURE_LIST = {
-
+            "/products/create"
     };
+
+    /*private static final String[] SELLER_SECURE_LIST = {
+            "/products/create"
+    };*/
 
     private final RSAPublicKey publicKey;
 
@@ -55,6 +59,7 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests()
                 .requestMatchers(SECURE_LIST).authenticated()
+                //.requestMatchers(SELLER_SECURE_LIST).hasRole("SCOPE_ROLE_SELLER")
                 .anyRequest().permitAll()
                 .and()
 

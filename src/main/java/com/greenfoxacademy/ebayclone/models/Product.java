@@ -19,12 +19,17 @@ public class Product {
 
     private String type;
 
-    private Integer price;
+    @Column(name = "purchase_price")
+    private Integer purchasePrice;
 
-    private Integer currency;
+    @Column(name = "current_bid")
+    private Integer currentBid;
+
+    private String currency = "EUR";
 
     private String description;
 
+    @Column(name = "picture_link")
     private String pictureLink;
 
     @ManyToOne(cascade = CascadeType.REFRESH)
@@ -33,14 +38,19 @@ public class Product {
     public Product() {
     }
 
-    public Product(String name, String type, Integer price, Integer currency, String description, String pictureLink, Seller seller) {
+    public Product(String name, String type, Integer purchasePrice, Integer currentBid, String description, String pictureLink, Seller seller) {
         this.name = name;
         this.type = type;
-        this.price = price;
-        this.currency = currency;
+        this.purchasePrice = purchasePrice;
+        this.currentBid = currentBid;
         this.description = description;
         this.pictureLink = pictureLink;
         this.seller = seller;
+    }
+
+    public void addAsSeller(Seller seller) {
+        this.seller = seller;
+        seller.addProductToList(this);
     }
 
     public Integer getId() {
@@ -67,19 +77,27 @@ public class Product {
         this.type = type;
     }
 
-    public Integer getPrice() {
-        return price;
+    public Integer getPurchasePrice() {
+        return purchasePrice;
     }
 
-    public void setPrice(Integer price) {
-        this.price = price;
+    public void setPurchasePrice(Integer purchasePrice) {
+        this.purchasePrice = purchasePrice;
     }
 
-    public Integer getCurrency() {
+    public Integer getCurrentBid() {
+        return currentBid;
+    }
+
+    public void setCurrentBid(Integer currentBid) {
+        this.currentBid = currentBid;
+    }
+
+    public String getCurrency() {
         return currency;
     }
 
-    public void setCurrency(Integer currency) {
+    public void setCurrency(String currency) {
         this.currency = currency;
     }
 

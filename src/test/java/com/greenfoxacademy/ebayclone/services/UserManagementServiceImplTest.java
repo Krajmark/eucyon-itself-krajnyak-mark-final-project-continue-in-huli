@@ -35,13 +35,20 @@ class UserManagementServiceImplTest {
     JwtProviderService jwtProviderService;
     @Mock
     PasswordEncoder passwordEncoder;
+    @Mock
+    BindingResultHandlerService bindingResultHandlerService;
     UserManagementServiceImpl userManagementService;
     UserDTO userDTO;
 
     @BeforeEach
     public void setup() {
         this.userDTO = new UserDTO("testName", "testPassword");
-        this.userManagementService = new UserManagementServiceImpl(this.userRepo, this.passwordEncoder, this.jwtProviderService);
+        this.userManagementService = new UserManagementServiceImpl(
+                this.userRepo,
+                this.passwordEncoder,
+                this.jwtProviderService,
+                this.bindingResultHandlerService
+        );
     }
 
     @Test
@@ -51,6 +58,7 @@ class UserManagementServiceImplTest {
         user.setBalance(0);
         LoginResponseDTO expected = new LoginResponseDTO("asd", 0);
 
+        doNothing().when(this.bindingResultHandlerService).handleBindingResult(this.bindingResult);
         when(this.userRepo.findUserByUsername(userDTO.getUsername())).thenReturn(Optional.of(user));
         when(this.jwtProviderService.generateTokenByUserLoginRequest(userDTO)).thenReturn("asd");
         LoginResponseDTO actual = this.userManagementService.processLoginRequest(userDTO, this.bindingResult);
@@ -65,6 +73,7 @@ class UserManagementServiceImplTest {
     void createNewUserShouldSucceed(String usertype) throws UsernameAlreadyInUseException {
         Boolean userAlreadyExists = false;
 
+        doNothing().when(this.bindingResultHandlerService).handleBindingResult(this.bindingResult);
         when(this.userRepo.existsByUsername(this.userDTO.getUsername())).thenReturn(userAlreadyExists);
         when(this.passwordEncoder.encode(this.userDTO.getPassword())).thenReturn("testPassword");
         this.userManagementService.createNewUser(usertype, this.userDTO, this.bindingResult);
@@ -78,6 +87,7 @@ class UserManagementServiceImplTest {
     void createNewUserShouldThrowUsernameAlreadyInUseExc(String usertype) {
         Boolean userAlreadyExists = true;
 
+        doNothing().when(this.bindingResultHandlerService).handleBindingResult(this.bindingResult);
         when(this.userRepo.existsByUsername(this.userDTO.getUsername())).thenReturn(userAlreadyExists);
         assertThrows(
                 UsernameAlreadyInUseException.class,
@@ -93,6 +103,7 @@ class UserManagementServiceImplTest {
     void createNewUserShouldThrowIllegalArgumentExc(String usertype) {
         Boolean userAlreadyExists = false;
 
+        doNothing().when(this.bindingResultHandlerService).handleBindingResult(this.bindingResult);
         when(this.userRepo.existsByUsername(this.userDTO.getUsername())).thenReturn(userAlreadyExists);
         assertThrows(
                 IllegalArgumentException.class,
