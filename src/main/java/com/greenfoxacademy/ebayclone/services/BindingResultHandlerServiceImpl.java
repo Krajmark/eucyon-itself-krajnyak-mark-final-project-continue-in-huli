@@ -8,7 +8,7 @@ import org.springframework.validation.BindingResult;
 import java.util.Objects;
 
 @Service
-public class BindingResultHandlerServiceImpl implements BindingResultHandlerService{
+public class BindingResultHandlerServiceImpl implements BindingResultHandlerService {
     @Override
     public void handleBindingResult(BindingResult bindingResult) throws ValidationException {
         if (bindingResult.hasErrors()) {
