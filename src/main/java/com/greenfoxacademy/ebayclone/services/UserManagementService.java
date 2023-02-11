@@ -10,6 +10,6 @@ public interface UserManagementService {
 
     LoginResponseDTO processLoginRequest(UserCreationDTO userCreationDTO, BindingResult bindingResult) throws PasswordInvalidException;
 
-    void createNewUser(String userType, UserCreationDTO userCreationDTO, BindingResult bindingResult) throws UsernameAlreadyInUseException;
+    boolean createNewUser(String userType, UserCreationDTO userCreationDTO, BindingResult bindingResult) throws UsernameAlreadyInUseException;
 
 }

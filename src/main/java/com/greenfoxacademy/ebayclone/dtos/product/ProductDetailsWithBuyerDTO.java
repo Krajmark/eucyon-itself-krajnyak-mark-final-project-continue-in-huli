@@ -1,11 +1,11 @@
 package com.greenfoxacademy.ebayclone.dtos.product;
 
-import com.greenfoxacademy.ebayclone.dtos.user.BuyerDTO;
+import com.greenfoxacademy.ebayclone.dtos.user.UserResponseDTO;
 
 public class ProductDetailsWithBuyerDTO extends ProductDetailsDTO {
-    private BuyerDTO buyer;
+    private UserResponseDTO buyer;
 
-    public ProductDetailsWithBuyerDTO(Integer id, String name, String type, Integer purchasePrice, Integer currentBid, String currency, String description, String pictureLink, BuyerDTO buyer) {
+    public ProductDetailsWithBuyerDTO(Integer id, String name, String type, Integer purchasePrice, Integer currentBid, String currency, String description, String pictureLink, UserResponseDTO buyer) {
         super(id, name, type, purchasePrice, currentBid, currency, description, pictureLink);
         this.buyer = buyer;
     }
@@ -13,11 +13,11 @@ public class ProductDetailsWithBuyerDTO extends ProductDetailsDTO {
     public ProductDetailsWithBuyerDTO() {
     }
 
-    public BuyerDTO getBuyer() {
+    public UserResponseDTO getBuyer() {
         return buyer;
     }
 
-    public void setBuyer(BuyerDTO buyer) {
+    public void setBuyer(UserResponseDTO buyer) {
         this.buyer = buyer;
     }
 }

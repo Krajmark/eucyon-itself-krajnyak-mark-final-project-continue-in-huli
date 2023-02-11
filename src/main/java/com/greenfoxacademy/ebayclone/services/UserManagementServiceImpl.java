@@ -42,7 +42,7 @@ public class UserManagementServiceImpl implements UserManagementService {
     }
 
     @Override
-    public void createNewUser(String userType, UserCreationDTO userCreationDTO, BindingResult bindingResult) throws UsernameAlreadyInUseException {
+    public boolean createNewUser(String userType, UserCreationDTO userCreationDTO, BindingResult bindingResult) throws UsernameAlreadyInUseException {
         this.bindingResultHandlerService.handleBindingResult(bindingResult);
         if (this.userRepo.existsByUsername(userCreationDTO.getUsername())) {
             throw new UsernameAlreadyInUseException();
@@ -54,6 +54,7 @@ public class UserManagementServiceImpl implements UserManagementService {
             case "buyer" -> createBuyer(userCreationDTO);
             default -> throw new IllegalArgumentException("Not a supported user-type!");
         }
+        return true;
     }
 
     private void createAdmin(UserCreationDTO userCreationDTO) {

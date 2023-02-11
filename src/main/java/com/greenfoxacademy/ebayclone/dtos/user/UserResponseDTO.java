@@ -1,6 +1,6 @@
 package com.greenfoxacademy.ebayclone.dtos.user;
 
-public record BuyerDTO(
+public record UserResponseDTO(
         Integer id,
         String username
 ) {

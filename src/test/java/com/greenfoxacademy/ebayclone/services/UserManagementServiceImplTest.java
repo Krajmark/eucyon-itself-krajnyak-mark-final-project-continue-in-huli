@@ -20,8 +20,7 @@ import org.springframework.validation.BindingResult;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -76,7 +75,7 @@ class UserManagementServiceImplTest {
         doNothing().when(this.bindingResultHandlerService).handleBindingResult(this.bindingResult);
         when(this.userRepo.existsByUsername(this.userCreationDTO.getUsername())).thenReturn(userAlreadyExists);
         when(this.passwordEncoder.encode(this.userCreationDTO.getPassword())).thenReturn("testPassword");
-        this.userManagementService.createNewUser(usertype, this.userCreationDTO, this.bindingResult);
+        assertTrue(this.userManagementService.createNewUser(usertype, this.userCreationDTO, this.bindingResult));
 
         verify(this.userRepo, times(1)).existsByUsername(this.userCreationDTO.getUsername());
         verify(this.passwordEncoder, times(1)).encode(this.userCreationDTO.getPassword());

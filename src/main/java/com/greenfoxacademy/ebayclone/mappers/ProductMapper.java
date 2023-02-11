@@ -13,7 +13,6 @@ public interface ProductMapper {
 
     ProductMapper INSTANCE = Mappers.getMapper(ProductMapper.class);
 
-
     @Mapping(target = "buyer", ignore = true)
     @Mapping(target = "isSold", ignore = true)
     @Mapping(target = "seller", ignore = true)
