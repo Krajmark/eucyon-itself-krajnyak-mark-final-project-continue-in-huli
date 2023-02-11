@@ -2,7 +2,7 @@ package com.greenfoxacademy.ebayclone.controllers;
 
 
 import com.greenfoxacademy.ebayclone.dtos.user.LoginResponseDTO;
-import com.greenfoxacademy.ebayclone.dtos.user.UserDTO;
+import com.greenfoxacademy.ebayclone.dtos.user.UserCreationDTO;
 import com.greenfoxacademy.ebayclone.exeptions.user.PasswordInvalidException;
 import com.greenfoxacademy.ebayclone.exeptions.user.UsernameAlreadyInUseException;
 import com.greenfoxacademy.ebayclone.services.UserManagementService;
@@ -26,19 +26,19 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> sendToken(
-            @Valid @RequestBody UserDTO userDTO,
+            @Valid @RequestBody UserCreationDTO userCreationDTO,
             BindingResult bindingResult
     ) throws PasswordInvalidException {
-        return ResponseEntity.ok(this.userManagementService.processLoginRequest(userDTO, bindingResult));
+        return ResponseEntity.ok(this.userManagementService.processLoginRequest(userCreationDTO, bindingResult));
     }
 
     @PostMapping("/register/{userType}")
     public ResponseEntity<?> createAccount(
-            @Valid @RequestBody UserDTO userDTO,
+            @Valid @RequestBody UserCreationDTO userCreationDTO,
             BindingResult bindingResult,
             @PathVariable String userType
     ) throws UsernameAlreadyInUseException {
-        this.userManagementService.createNewUser(userType, userDTO, bindingResult);
+        this.userManagementService.createNewUser(userType, userCreationDTO, bindingResult);
         return ResponseEntity.created(null).build();
     }
 }

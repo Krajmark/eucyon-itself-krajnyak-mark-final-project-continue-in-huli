@@ -1,7 +1,7 @@
 package com.greenfoxacademy.ebayclone.services;
 
 import com.greenfoxacademy.ebayclone.dtos.user.LoginResponseDTO;
-import com.greenfoxacademy.ebayclone.dtos.user.UserDTO;
+import com.greenfoxacademy.ebayclone.dtos.user.UserCreationDTO;
 import com.greenfoxacademy.ebayclone.exeptions.user.PasswordInvalidException;
 import com.greenfoxacademy.ebayclone.exeptions.user.UsernameAlreadyInUseException;
 import com.greenfoxacademy.ebayclone.models.Admin;
@@ -34,37 +34,37 @@ public class UserManagementServiceImpl implements UserManagementService {
     }
 
     @Override
-    public LoginResponseDTO processLoginRequest(UserDTO userDTO, BindingResult bindingResult) throws PasswordInvalidException {
+    public LoginResponseDTO processLoginRequest(UserCreationDTO userCreationDTO, BindingResult bindingResult) throws PasswordInvalidException {
         this.bindingResultHandlerService.handleBindingResult(bindingResult);
-        String token = this.jwtProviderService.generateTokenByUserLoginRequest(userDTO);
-        Integer balance = this.userRepo.findUserByUsername(userDTO.getUsername()).get().getBalance();
+        String token = this.jwtProviderService.generateTokenByUserLoginRequest(userCreationDTO);
+        Integer balance = this.userRepo.findUserByUsername(userCreationDTO.getUsername()).get().getBalance();
         return new LoginResponseDTO(token, balance);
     }
 
     @Override
-    public void createNewUser(String userType, UserDTO userDTO, BindingResult bindingResult) throws UsernameAlreadyInUseException {
+    public void createNewUser(String userType, UserCreationDTO userCreationDTO, BindingResult bindingResult) throws UsernameAlreadyInUseException {
         this.bindingResultHandlerService.handleBindingResult(bindingResult);
-        if (this.userRepo.existsByUsername(userDTO.getUsername())) {
+        if (this.userRepo.existsByUsername(userCreationDTO.getUsername())) {
             throw new UsernameAlreadyInUseException();
         }
-        userDTO.setPassword(this.passwordEncoder.encode(userDTO.getPassword()));
+        userCreationDTO.setPassword(this.passwordEncoder.encode(userCreationDTO.getPassword()));
         switch (userType.toLowerCase().trim()) {
-            case "admin" -> createAdmin(userDTO);
-            case "seller" -> createSeller(userDTO);
-            case "buyer" -> createBuyer(userDTO);
+            case "admin" -> createAdmin(userCreationDTO);
+            case "seller" -> createSeller(userCreationDTO);
+            case "buyer" -> createBuyer(userCreationDTO);
             default -> throw new IllegalArgumentException("Not a supported user-type!");
         }
     }
 
-    private void createAdmin(UserDTO userDTO) {
-        this.userRepo.save(new Admin(userDTO.getUsername(), userDTO.getPassword()));
+    private void createAdmin(UserCreationDTO userCreationDTO) {
+        this.userRepo.save(new Admin(userCreationDTO.getUsername(), userCreationDTO.getPassword()));
     }
 
-    private void createSeller(UserDTO userDTO) {
-        this.userRepo.save(new Seller(userDTO.getUsername(), userDTO.getPassword(), 0));
+    private void createSeller(UserCreationDTO userCreationDTO) {
+        this.userRepo.save(new Seller(userCreationDTO.getUsername(), userCreationDTO.getPassword(), 0));
     }
 
-    private void createBuyer(UserDTO userDTO) {
-        this.userRepo.save(new Buyer(userDTO.getUsername(), userDTO.getPassword(), 0));
+    private void createBuyer(UserCreationDTO userCreationDTO) {
+        this.userRepo.save(new Buyer(userCreationDTO.getUsername(), userCreationDTO.getPassword(), 0));
     }
 }
