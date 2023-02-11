@@ -56,6 +56,7 @@ public class ProductManagementServiceImpl implements ProductManagementService {
         int pageNumber = Integer.parseInt(page);
         Pageable pageable = Pageable.ofSize(20).withPage(pageNumber);
         return this.productRepo.findAll(pageable).stream()
+                .filter(product -> !product.getIsSold())
                 .map(ProductMapper.INSTANCE::productToProductDetailsDto)
                 .toList();
     }
@@ -65,7 +66,11 @@ public class ProductManagementServiceImpl implements ProductManagementService {
         int intId = Integer.parseInt(id);
         Optional<Product> productOptional = this.productRepo.findById(intId);
         if (productOptional.isPresent()) {
-            return ProductMapper.INSTANCE.productToProductDetailsDto(productOptional.get());
+            Product product = productOptional.get();
+            if (product.getIsSold()) {
+                return ProductMapper.INSTANCE.productToProductDetailsWithBuyerDto(product);
+            }
+            return ProductMapper.INSTANCE.productToProductDetailsDto(product);
         }
         throw new ProductNotFoundException("No product under such(".concat(id).concat(") id"));
     }

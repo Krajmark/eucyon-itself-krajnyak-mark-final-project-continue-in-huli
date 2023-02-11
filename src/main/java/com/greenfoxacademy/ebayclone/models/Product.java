@@ -32,8 +32,14 @@ public class Product {
     @Column(name = "picture_link")
     private String pictureLink;
 
+    @Column(name = "is_sold")
+    private Boolean isSold = false;
+
     @ManyToOne(cascade = CascadeType.REFRESH)
     private Seller seller;
+
+    @ManyToOne(cascade = CascadeType.REFRESH)
+    private Buyer buyer;
 
     public Product() {
     }
@@ -48,9 +54,22 @@ public class Product {
         this.seller = seller;
     }
 
+    public void addAsBuyer(Buyer buyer) {
+        this.buyer = buyer;
+        buyer.addToOrderHistory(this);
+    }
+
     public void addAsSeller(Seller seller) {
         this.seller = seller;
         seller.addProductToList(this);
+    }
+
+    public Boolean getIsSold() {
+        return isSold;
+    }
+
+    public void setIsSold(Boolean isSold) {
+        this.isSold = isSold;
     }
 
     public Integer getId() {
@@ -123,5 +142,13 @@ public class Product {
 
     public void setSeller(Seller seller) {
         this.seller = seller;
+    }
+
+    public Buyer getBuyer() {
+        return buyer;
+    }
+
+    public void setBuyer(Buyer buyer) {
+        this.buyer = buyer;
     }
 }
