@@ -31,7 +31,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 userCandidate.get().getUsername(),
                 userCandidate.get().getPassword(),
                 // Needed to add "ROLE_" because the sec context automatically ads it when going through the filterChain method
-                List.of(new SimpleGrantedAuthority("ROLE_" + userCandidate.get().getClass().getSimpleName().toUpperCase())));
+                List.of(new SimpleGrantedAuthority(userCandidate.get().getClass().getSimpleName().toUpperCase())));
     }
 
 }

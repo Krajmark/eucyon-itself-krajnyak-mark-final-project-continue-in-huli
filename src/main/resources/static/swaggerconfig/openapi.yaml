@@ -100,9 +100,23 @@ paths:
           required: true
           in: path
           description: Path variable determining the registration's type
+          examples:
+            admin:
+              summary: For registering as an admin user
+              value: admin
+            seller:
+              summary: For registering as a seller
+              value: seller
+            buyer:
+              summary: For registering as a customer
+              value: buyer
           schema:
             type: string
             default: admin
+            enum:
+              - admin
+              - seller
+              - buyer
       requestBody:
         required: true
         content:

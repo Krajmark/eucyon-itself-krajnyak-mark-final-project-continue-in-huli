@@ -41,3 +41,10 @@ But because it's terrible [here](https://reflectoring.io/jacoco/#:~:text=define%
 ## Test report available under
 
 `/build/reports/tests/index.html`
+
+## Swagger docs
+
+We use swagger to document our API  
+Docs [here](https://springdoc.org/v2/) and [here](https://swagger.io/specification/v3/)  
+Available locally [at](https://localhost:8080/swagger-ui)
+or deployed [at](https://ebayclone-production.up.railway.app/swagger-ui/index.html)

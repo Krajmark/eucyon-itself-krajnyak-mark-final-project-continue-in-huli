@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-public class UserDTO {
+public class UserCreationDTO {
     @Size(min = 6, message = "Username have to be longer than 5")
     @NotBlank(message = "Username cannot be blank")
     @NotNull(message = "Username cannot be null")
@@ -14,12 +14,12 @@ public class UserDTO {
     @NotNull(message = "Password cannot be null")
     private String password;
 
-    public UserDTO(String username, String password) {
+    public UserCreationDTO(String username, String password) {
         this.username = username;
         this.password = password;
     }
 
-    public UserDTO() {
+    public UserCreationDTO() {
     }
 
     public String getUsername() {

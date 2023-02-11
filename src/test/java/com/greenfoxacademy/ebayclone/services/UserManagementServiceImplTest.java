@@ -1,7 +1,7 @@
 package com.greenfoxacademy.ebayclone.services;
 
 import com.greenfoxacademy.ebayclone.dtos.user.LoginResponseDTO;
-import com.greenfoxacademy.ebayclone.dtos.user.UserDTO;
+import com.greenfoxacademy.ebayclone.dtos.user.UserCreationDTO;
 import com.greenfoxacademy.ebayclone.exeptions.user.PasswordInvalidException;
 import com.greenfoxacademy.ebayclone.exeptions.user.UsernameAlreadyInUseException;
 import com.greenfoxacademy.ebayclone.models.User;
@@ -22,7 +22,11 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(MockitoExtension.class)
@@ -35,29 +39,37 @@ class UserManagementServiceImplTest {
     JwtProviderService jwtProviderService;
     @Mock
     PasswordEncoder passwordEncoder;
+    @Mock
+    BindingResultHandlerService bindingResultHandlerService;
     UserManagementServiceImpl userManagementService;
-    UserDTO userDTO;
+    UserCreationDTO userCreationDTO;
 
     @BeforeEach
     public void setup() {
-        this.userDTO = new UserDTO("testName", "testPassword");
-        this.userManagementService = new UserManagementServiceImpl(this.userRepo, this.passwordEncoder, this.jwtProviderService);
+        this.userCreationDTO = new UserCreationDTO("testName", "testPassword");
+        this.userManagementService = new UserManagementServiceImpl(
+                this.userRepo,
+                this.passwordEncoder,
+                this.jwtProviderService,
+                this.bindingResultHandlerService
+        );
     }
 
     @Test
     void processLoginRequestShouldReturnWithCorrectLoginResponse() throws PasswordInvalidException {
-        UserDTO userDTO = this.userDTO;
+        UserCreationDTO userCreationDTO = this.userCreationDTO;
         User user = new User();
         user.setBalance(0);
         LoginResponseDTO expected = new LoginResponseDTO("asd", 0);
 
-        when(this.userRepo.findUserByUsername(userDTO.getUsername())).thenReturn(Optional.of(user));
-        when(this.jwtProviderService.generateTokenByUserLoginRequest(userDTO)).thenReturn("asd");
-        LoginResponseDTO actual = this.userManagementService.processLoginRequest(userDTO, this.bindingResult);
+        doNothing().when(this.bindingResultHandlerService).handleBindingResult(this.bindingResult);
+        when(this.userRepo.findUserByUsername(userCreationDTO.getUsername())).thenReturn(Optional.of(user));
+        when(this.jwtProviderService.generateTokenByUserLoginRequest(userCreationDTO)).thenReturn("asd");
+        LoginResponseDTO actual = this.userManagementService.processLoginRequest(userCreationDTO, this.bindingResult);
 
         assertEquals(expected, actual);
-        verify(this.userRepo, times(1)).findUserByUsername(userDTO.getUsername());
-        verify(this.jwtProviderService, times(1)).generateTokenByUserLoginRequest(userDTO);
+        verify(this.userRepo, times(1)).findUserByUsername(userCreationDTO.getUsername());
+        verify(this.jwtProviderService, times(1)).generateTokenByUserLoginRequest(userCreationDTO);
     }
 
     @ParameterizedTest
@@ -65,12 +77,13 @@ class UserManagementServiceImplTest {
     void createNewUserShouldSucceed(String usertype) throws UsernameAlreadyInUseException {
         Boolean userAlreadyExists = false;
 
-        when(this.userRepo.existsByUsername(this.userDTO.getUsername())).thenReturn(userAlreadyExists);
-        when(this.passwordEncoder.encode(this.userDTO.getPassword())).thenReturn("testPassword");
-        this.userManagementService.createNewUser(usertype, this.userDTO, this.bindingResult);
+        doNothing().when(this.bindingResultHandlerService).handleBindingResult(this.bindingResult);
+        when(this.userRepo.existsByUsername(this.userCreationDTO.getUsername())).thenReturn(userAlreadyExists);
+        when(this.passwordEncoder.encode(this.userCreationDTO.getPassword())).thenReturn("testPassword");
+        assertTrue(this.userManagementService.createNewUser(usertype, this.userCreationDTO, this.bindingResult));
 
-        verify(this.userRepo, times(1)).existsByUsername(this.userDTO.getUsername());
-        verify(this.passwordEncoder, times(1)).encode(this.userDTO.getPassword());
+        verify(this.userRepo, times(1)).existsByUsername(this.userCreationDTO.getUsername());
+        verify(this.passwordEncoder, times(1)).encode(this.userCreationDTO.getPassword());
     }
 
     @ParameterizedTest
@@ -78,14 +91,15 @@ class UserManagementServiceImplTest {
     void createNewUserShouldThrowUsernameAlreadyInUseExc(String usertype) {
         Boolean userAlreadyExists = true;
 
-        when(this.userRepo.existsByUsername(this.userDTO.getUsername())).thenReturn(userAlreadyExists);
+        doNothing().when(this.bindingResultHandlerService).handleBindingResult(this.bindingResult);
+        when(this.userRepo.existsByUsername(this.userCreationDTO.getUsername())).thenReturn(userAlreadyExists);
         assertThrows(
                 UsernameAlreadyInUseException.class,
-                () -> this.userManagementService.createNewUser(usertype, this.userDTO, this.bindingResult)
+                () -> this.userManagementService.createNewUser(usertype, this.userCreationDTO, this.bindingResult)
         );
 
-        verify(this.userRepo, times(1)).existsByUsername(this.userDTO.getUsername());
-        verify(this.passwordEncoder, times(0)).encode(this.userDTO.getPassword());
+        verify(this.userRepo, times(1)).existsByUsername(this.userCreationDTO.getUsername());
+        verify(this.passwordEncoder, times(0)).encode(this.userCreationDTO.getPassword());
     }
 
     @ParameterizedTest
@@ -93,14 +107,15 @@ class UserManagementServiceImplTest {
     void createNewUserShouldThrowIllegalArgumentExc(String usertype) {
         Boolean userAlreadyExists = false;
 
-        when(this.userRepo.existsByUsername(this.userDTO.getUsername())).thenReturn(userAlreadyExists);
+        doNothing().when(this.bindingResultHandlerService).handleBindingResult(this.bindingResult);
+        when(this.userRepo.existsByUsername(this.userCreationDTO.getUsername())).thenReturn(userAlreadyExists);
         assertThrows(
                 IllegalArgumentException.class,
-                () -> this.userManagementService.createNewUser(usertype, this.userDTO, this.bindingResult)
+                () -> this.userManagementService.createNewUser(usertype, this.userCreationDTO, this.bindingResult)
         );
 
-        verify(this.userRepo, times(1)).existsByUsername(this.userDTO.getUsername());
-        verify(this.passwordEncoder, times(0)).encode(this.userDTO.getPassword());
+        verify(this.userRepo, times(1)).existsByUsername(this.userCreationDTO.getUsername());
+        verify(this.passwordEncoder, times(0)).encode(this.userCreationDTO.getPassword());
     }
 
 }
