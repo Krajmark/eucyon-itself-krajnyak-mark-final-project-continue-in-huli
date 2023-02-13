@@ -34,7 +34,12 @@ import java.util.UUID;
 @Configuration
 public class SecurityConfig {
 
-    private static final String[] SECURE_LIST = {
+    private static final String[] PUBLIC_ALLOW_LIST = {
+            "/",
+            "/index",
+            "/health/check",
+            "/auth/register/*",
+            "/auth/login"
     };
 
     private static final String[] SELLER_SECURE_LIST = {
@@ -58,8 +63,8 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests()
                 .requestMatchers(SELLER_SECURE_LIST).hasAuthority("SCOPE_SELLER")
-                .requestMatchers(SECURE_LIST).authenticated()
-                .anyRequest().permitAll()
+                .requestMatchers(PUBLIC_ALLOW_LIST).permitAll()
+                .anyRequest().authenticated()
                 .and()
 
                 .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
