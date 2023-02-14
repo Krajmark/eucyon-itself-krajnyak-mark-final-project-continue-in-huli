@@ -207,8 +207,8 @@ paths:
     get:
       tags:
         - product
-      summary: List all products with pages
-      operationId: products
+      summary: Get specific products by their id
+      operationId: product
       security:
         - JWT_Auth: [ ]
       parameters:
