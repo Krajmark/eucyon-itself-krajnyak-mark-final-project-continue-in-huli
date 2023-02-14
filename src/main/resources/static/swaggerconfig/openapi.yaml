@@ -16,6 +16,8 @@ servers:
 tags:
   - name: main
     description: Basic stuff...
+  - name: product
+    description: Product related endpoints
   #  - name: user
   #    description: Operations with users
   #    externalDocs:
@@ -62,7 +64,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserDTO'
+              $ref: '#/components/schemas/UserCreationDTO'
 
       responses:
         200:
@@ -122,7 +124,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserDTO'
+              $ref: '#/components/schemas/UserCreationDTO'
       responses:
         201:
           description: Successful registration
@@ -138,7 +140,41 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MessageDTO'
-
+  /products/create:
+    post:
+      tags:
+        - auth
+      summary: Login to the application
+      operationId: login
+      security:
+        - JWT_Auth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductCreationDTO'
+      responses:
+        201:
+          description: Successful registration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductDetailsDTO'
+        401:
+          description: No token added
+        404:
+          description: Cold not retrieve seller
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageDTO'
+        400:
+          description: Can't create product due to invalid request body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageDTO'
 components:
   schemas:
     EsterEgg:
@@ -156,7 +192,7 @@ components:
           type: array
           items:
             type: string
-    UserDTO:
+    UserCreationDTO:
       type: object
       properties:
         username:
@@ -182,6 +218,53 @@ components:
           type: array
           items:
             type: string
+    ProductCreationDTO:
+      type: object
+      required: true
+      properties:
+        name:
+          type: string
+          required: true
+          default: asd
+        type:
+          type: string
+          required: true
+          default: asdType
+        purchase_price:
+          type: number
+          required: true
+          default: 42069
+        min_bid:
+          type: number
+          required: true
+          default: 420
+        description:
+          type: string
+          required: true
+          default: asdDescription
+        picture_link:
+          type: string
+          required: true
+          default: https://t3.ftcdn.net/jpg/02/59/26/28/360_F_259262856_55HfYlTYfzgr95bJ7w01TdxVBqwmzYZu.jpg
+    ProductDetailsDTO:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+        type:
+          type: string
+        purchase_price:
+          type: number
+        current_bid:
+          type: number
+        currency:
+          type: number
+        description:
+          type: string
+        picture_link:
+          type: string
 
   securitySchemes:
     JWT_Auth:
