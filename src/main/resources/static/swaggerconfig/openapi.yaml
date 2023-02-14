@@ -16,6 +16,8 @@ servers:
 tags:
   - name: main
     description: Basic stuff...
+  - name: auth
+    description: Authentication related endpoints
   - name: product
     description: Product related endpoints
   #  - name: user
@@ -23,8 +25,6 @@ tags:
   #    externalDocs:
   #      description: Register as a customer on our website
   #      url: https://ebayclone-production.up.railway.app/auth/register/buyer
-  - name: auth
-    description: Authentication related endpoints
 paths:
   /index:
     get:
