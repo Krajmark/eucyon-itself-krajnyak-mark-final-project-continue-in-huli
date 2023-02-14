@@ -163,6 +163,8 @@ paths:
                 $ref: '#/components/schemas/ProductDetailsDTO'
         401:
           description: No token added
+        403:
+          description: Not authorized to access resource
         404:
           description: Cold not retrieve seller
           content:
@@ -282,7 +284,7 @@ components:
         name:
           type: string
           required: true
-          default: asd
+          default: asdName
         type:
           type: string
           required: true
