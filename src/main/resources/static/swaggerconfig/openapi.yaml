@@ -143,7 +143,7 @@ paths:
   /products/create:
     post:
       tags:
-        - auth
+        - product
       summary: Login to the application
       operationId: login
       security:
@@ -175,6 +175,63 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MessageDTO'
+  /products:
+    get:
+      tags:
+        - product
+      summary: List all products with pages
+      operationId: products
+      security:
+        - JWT_Auth: [ ]
+      parameters:
+        - name: page
+          required: false
+          in: query
+          schema:
+            type: string
+            default: 0
+      responses:
+        200:
+          description: Successful retrieval
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductDetailsDTO'
+        401:
+          description: No token added
+  /products/{id}:
+    get:
+      tags:
+        - product
+      summary: List all products with pages
+      operationId: products
+      security:
+        - JWT_Auth: [ ]
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+            default: 1
+      responses:
+        200:
+          description: Successful retrieval
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductDetailsDTO'
+        401:
+          description: No token added
+        400:
+          description: Can't retrieve product due to invalid request/query param
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageDTO'
+
 components:
   schemas:
     EsterEgg:
