@@ -39,7 +39,8 @@ public class SecurityConfig {
             "/index",
             "/health/check",
             "/auth/register/*",
-            "/auth/login"
+            "/auth/login",
+            "/swagger-ui"
     };
 
     private static final String[] SELLER_SECURE_LIST = {
