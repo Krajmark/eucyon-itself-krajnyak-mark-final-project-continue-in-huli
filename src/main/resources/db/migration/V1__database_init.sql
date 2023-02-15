@@ -5,6 +5,7 @@ create table ebayclone.product_seq
 
 insert into ebayclone.product_seq value (1);
 
+
 create table ebayclone.user
 (
     id       int          not null
@@ -40,21 +41,36 @@ create table ebayclone.seller
 
 create table ebayclone.product
 (
-    id             int          not null
+    id                        int          not null
         primary key,
-    currency       varchar(255) null,
-    current_bid    int          null,
-    description    varchar(255) null,
-    is_sold        bit          null,
-    name           varchar(255) null,
-    picture_link   varchar(255) null,
-    purchase_price int          null,
-    type           varchar(255) null,
-    buyer_id       int          null,
-    seller_id      int          null,
+    currency                  varchar(255) null,
+    current_bid               int          null,
+    description               varchar(255) null,
+    is_sold                   bit          null,
+    name                      varchar(255) null,
+    picture_link              varchar(255) null,
+    purchase_price            int          null,
+    type                      varchar(255) null,
+    buyer_id                  int          null,
+    current_highest_bidder_id int          null,
+    seller_id                 int          null,
     constraint FKesd6fy52tk7esoo2gcls4lfe3
         foreign key (seller_id) references ebayclone.seller (id),
+    constraint FKjq1ly6a5saamkl2kn0sojdda2
+        foreign key (current_highest_bidder_id) references ebayclone.buyer (id),
     constraint FKoxedx2y56mworpfxljluo6yts
+        foreign key (buyer_id) references ebayclone.buyer (id)
+);
+
+create table ebayclone.buyer_bid_history
+(
+    buyer_id       int not null,
+    bid_history_id int not null,
+    constraint UK_6jqrr2x2wxqcsa5giquldw49g
+        unique (bid_history_id),
+    constraint FK7as233axmdkmd14as87iqo2xp
+        foreign key (bid_history_id) references ebayclone.product (id),
+    constraint FK90ixc9ihvtw6a2b3j7rond0o0
         foreign key (buyer_id) references ebayclone.buyer (id)
 );
 

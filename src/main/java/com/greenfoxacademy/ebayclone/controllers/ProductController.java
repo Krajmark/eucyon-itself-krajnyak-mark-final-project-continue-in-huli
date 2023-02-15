@@ -3,7 +3,10 @@ package com.greenfoxacademy.ebayclone.controllers;
 import com.greenfoxacademy.ebayclone.dtos.product.ProductBidDTO;
 import com.greenfoxacademy.ebayclone.dtos.product.ProductCreationDTO;
 import com.greenfoxacademy.ebayclone.dtos.product.ProductDetailsDTO;
+import com.greenfoxacademy.ebayclone.exeptions.product.BidTooLowException;
+import com.greenfoxacademy.ebayclone.exeptions.product.ProductAlreadySoldException;
 import com.greenfoxacademy.ebayclone.exeptions.product.ProductNotFoundException;
+import com.greenfoxacademy.ebayclone.exeptions.user.NotEnoughBalanceException;
 import com.greenfoxacademy.ebayclone.services.ProductManagementService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -61,7 +64,7 @@ public class ProductController {
             @Valid @RequestBody ProductBidDTO productBidDTO,
             BindingResult bindingResult,
             Authentication authentication
-    ) throws ProductNotFoundException {
+    ) throws ProductNotFoundException, BidTooLowException, ProductAlreadySoldException, NotEnoughBalanceException {
         return ResponseEntity.ok(this.productManagementService.bidOnProduct(id, productBidDTO, bindingResult, authentication));
     }
 }

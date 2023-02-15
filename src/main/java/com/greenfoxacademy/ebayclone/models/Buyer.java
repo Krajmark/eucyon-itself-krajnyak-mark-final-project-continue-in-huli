@@ -12,6 +12,9 @@ public class Buyer extends User {
     @OneToMany(cascade = CascadeType.REFRESH)
     private List<Product> orderHistory = new ArrayList<>();
 
+    @OneToMany(cascade = CascadeType.REFRESH)
+    private List<Product> bidHistory = new ArrayList<>();
+
     public Buyer() {
     }
 
@@ -21,7 +24,22 @@ public class Buyer extends User {
 
     public void addToOrderHistory(Product product) {
         this.orderHistory.add(product);
-        product.addAsBuyer(this);
+        product.setBuyer(this);
+    }
+
+    public void addToBidHistory(Product product) {
+        if (!this.bidHistory.contains(product)) {
+            this.bidHistory.add(product);
+        }
+        product.setCurrentHighestBidder(this);
+    }
+
+    public List<Product> getBidHistory() {
+        return bidHistory;
+    }
+
+    public void setBidHistory(List<Product> bidHistory) {
+        this.bidHistory = bidHistory;
     }
 
     public List<Product> getOrderHistory() {

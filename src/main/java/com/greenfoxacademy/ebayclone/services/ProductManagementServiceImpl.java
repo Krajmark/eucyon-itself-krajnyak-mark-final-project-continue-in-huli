@@ -3,9 +3,10 @@ package com.greenfoxacademy.ebayclone.services;
 import com.greenfoxacademy.ebayclone.dtos.product.ProductBidDTO;
 import com.greenfoxacademy.ebayclone.dtos.product.ProductCreationDTO;
 import com.greenfoxacademy.ebayclone.dtos.product.ProductDetailsDTO;
-import com.greenfoxacademy.ebayclone.dtos.product.ProductDetailsWithBuyerDTO;
 import com.greenfoxacademy.ebayclone.exeptions.product.BidTooLowException;
+import com.greenfoxacademy.ebayclone.exeptions.product.ProductAlreadySoldException;
 import com.greenfoxacademy.ebayclone.exeptions.product.ProductNotFoundException;
+import com.greenfoxacademy.ebayclone.exeptions.user.NotEnoughBalanceException;
 import com.greenfoxacademy.ebayclone.mappers.ProductMapper;
 import com.greenfoxacademy.ebayclone.models.Buyer;
 import com.greenfoxacademy.ebayclone.models.Product;
@@ -83,7 +84,7 @@ public class ProductManagementServiceImpl implements ProductManagementService {
     }
 
     @Override
-    public ProductDetailsWithBuyerDTO bidOnProduct(String id, ProductBidDTO productBidDTO, BindingResult bindingResult, Authentication authentication) throws ProductNotFoundException, BidTooLowException {
+    public ProductDetailsDTO bidOnProduct(String id, ProductBidDTO productBidDTO, BindingResult bindingResult, Authentication authentication) throws ProductNotFoundException, BidTooLowException, ProductAlreadySoldException, NotEnoughBalanceException {
         this.bindingResultHandlerService.handleBindingResult(bindingResult);
         int productId = Integer.parseInt(id);
         Optional<Product> productOptional = this.productRepo.findById(productId);
@@ -95,22 +96,43 @@ public class ProductManagementServiceImpl implements ProductManagementService {
             throw new UsernameNotFoundException("No such buyer with these credentials");
         }
         Product product = productOptional.get();
+        if (product.getIsSold()) {
+            throw new ProductAlreadySoldException("Product with ID(".concat(id).concat(") is already sold"));
+        }
         Buyer buyer = buyerOptional.get();
         int bid = productBidDTO.bid();
-        int currentBid = product.getCurrentBid();
-        if (bid <= currentBid) {
+        int currentHighestBid = product.getCurrentBid();
+        if (buyer.getBalance() < bid) {
+            throw new NotEnoughBalanceException(
+                    "Balance("
+                            .concat(String.valueOf(buyer.getBalance()))
+                            .concat(") is too low for bid(")
+                            .concat(String.valueOf(bid))
+                            .concat(")")
+            );
+        }
+        if (bid <= currentHighestBid) {
             throw new BidTooLowException(
                     "Given bid of "
                             .concat(String.valueOf(bid))
                             .concat(" ")
                             .concat(productBidDTO.currency())
-                            .concat(" is lower than the current bid of ")
-                            .concat(String.valueOf(currentBid))
+                            .concat(" is lower or equals to the current bid of ")
+                            .concat(String.valueOf(currentHighestBid))
+                            .concat(" ")
                             .concat(productBidDTO.currency())
             );
         }
+        if (bid < product.getPurchasePrice()) {
+            product.setCurrentBid(bid);
+            product.addAsHighestBidder(buyer);
+            product = this.productRepo.save(product);
+            this.buyerRepo.save(buyer);
+            return ProductMapper.INSTANCE.productToProductDetailsDto(product);
+        }
         product.addAsBuyer(buyer);
         product.setIsSold(true);
+        buyer.setBalance(buyer.getBalance() - bid);
         product = this.productRepo.save(product);
         this.buyerRepo.save(buyer);
         return ProductMapper.INSTANCE.productToProductDetailsWithBuyerDto(product);

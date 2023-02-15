@@ -43,6 +43,10 @@ public class SecurityConfig {
             "/products/create"
     };
 
+    private static final String[] BUYER_SECURE_LIST = {
+            "/products/*/bid"
+    };
+
     private final RSAPublicKey publicKey;
 
     private final RSAPrivateKey privateKey;
@@ -60,6 +64,7 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests()
                 .requestMatchers(SELLER_SECURE_LIST).hasAuthority("SCOPE_SELLER")
+                .requestMatchers(BUYER_SECURE_LIST).hasAuthority("SCOPE_BUYER")
                 .requestMatchers(SECURE_LIST).authenticated()
                 .anyRequest().permitAll()
                 .and()

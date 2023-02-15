@@ -5,7 +5,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 public record ProductBidDTO(
-        @NotBlank(message = "Bid cannot be blank")
         @NotNull(message = "Bid cannot be null")
         Integer bid,
         @NotBlank(message = "Currency cannot be blank")
