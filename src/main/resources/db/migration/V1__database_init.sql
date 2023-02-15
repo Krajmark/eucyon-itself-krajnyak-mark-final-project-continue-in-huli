@@ -3,6 +3,8 @@ create table ebayclone.product_seq
     next_val bigint null
 );
 
+insert into ebayclone.product_seq value (1);
+
 create table ebayclone.user
 (
     id       int          not null
@@ -85,3 +87,4 @@ create table ebayclone.user_seq
     next_val bigint null
 );
 
+insert into ebayclone.user_seq value (1);
