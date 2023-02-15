@@ -1,5 +1,6 @@
 package com.greenfoxacademy.ebayclone.controllers;
 
+import com.greenfoxacademy.ebayclone.dtos.product.ProductBidDTO;
 import com.greenfoxacademy.ebayclone.dtos.product.ProductCreationDTO;
 import com.greenfoxacademy.ebayclone.dtos.product.ProductDetailsDTO;
 import com.greenfoxacademy.ebayclone.exeptions.product.ProductNotFoundException;
@@ -52,5 +53,15 @@ public class ProductController {
             @PathVariable String id
     ) throws ProductNotFoundException {
         return ResponseEntity.ok(this.productManagementService.getProductById(id));
+    }
+
+    @GetMapping("/{id}/bid")
+    public ResponseEntity<ProductDetailsDTO> bidOnSpecificItem(
+            @PathVariable String id,
+            @Valid @RequestBody ProductBidDTO productBidDTO,
+            BindingResult bindingResult,
+            Authentication authentication
+    ) throws ProductNotFoundException {
+        return ResponseEntity.ok(this.productManagementService.bidOnProduct(id, productBidDTO, bindingResult, authentication));
     }
 }

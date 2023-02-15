@@ -1,6 +1,7 @@
 package com.greenfoxacademy.ebayclone.exeptions;
 
 import com.greenfoxacademy.ebayclone.dtos.MessageDTO;
+import com.greenfoxacademy.ebayclone.exeptions.product.BidTooLowException;
 import com.greenfoxacademy.ebayclone.exeptions.product.ProductNotFoundException;
 import com.greenfoxacademy.ebayclone.exeptions.user.PasswordInvalidException;
 import com.greenfoxacademy.ebayclone.exeptions.user.UsernameAlreadyInUseException;
@@ -49,7 +50,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         );
     }
 
-    @ExceptionHandler({IllegalArgumentException.class, NumberFormatException.class})
+    @ExceptionHandler({IllegalArgumentException.class, NumberFormatException.class, BidTooLowException.class})
     public ResponseEntity<MessageDTO> handleIllegalArgumentAndNumberFormatExceptions(
             Exception exception
     ) {
