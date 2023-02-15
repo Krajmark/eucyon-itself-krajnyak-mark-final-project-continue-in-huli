@@ -83,6 +83,7 @@ public class ProductManagementServiceImpl implements ProductManagementService {
         throw new ProductNotFoundException("No product under such(".concat(id).concat(") id"));
     }
 
+    //TODO: refactor this monstrosity
     @Override
     public ProductDetailsDTO bidOnProduct(String id, ProductBidDTO productBidDTO, BindingResult bindingResult, Authentication authentication) throws ProductNotFoundException, BidTooLowException, ProductAlreadySoldException, NotEnoughBalanceException {
         this.bindingResultHandlerService.handleBindingResult(bindingResult);
@@ -132,6 +133,8 @@ public class ProductManagementServiceImpl implements ProductManagementService {
         }
         product.addAsBuyer(buyer);
         product.setIsSold(true);
+        product.setCurrentBid(bid);
+        product.setPurchasePrice(bid);
         buyer.setBalance(buyer.getBalance() - bid);
         product = this.productRepo.save(product);
         this.buyerRepo.save(buyer);
