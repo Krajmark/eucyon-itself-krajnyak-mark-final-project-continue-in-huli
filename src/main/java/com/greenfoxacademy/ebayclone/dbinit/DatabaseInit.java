@@ -5,10 +5,12 @@ import com.greenfoxacademy.ebayclone.models.User;
 import com.greenfoxacademy.ebayclone.repositories.UserRepo;
 import com.greenfoxacademy.ebayclone.services.UserManagementService;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Profile("!test")
 @Component
 public class DatabaseInit implements CommandLineRunner {
 
