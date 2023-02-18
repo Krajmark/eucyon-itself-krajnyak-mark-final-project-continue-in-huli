@@ -41,6 +41,9 @@ public class Product {
     @ManyToOne(cascade = CascadeType.REFRESH)
     private Buyer buyer;
 
+    @ManyToOne(cascade = CascadeType.REFRESH)
+    private Buyer currentHighestBidder;
+
     public Product() {
     }
 
@@ -54,6 +57,11 @@ public class Product {
         this.seller = seller;
     }
 
+    public void addAsHighestBidder(Buyer buyer) {
+        this.currentHighestBidder = buyer;
+        buyer.addToBidHistory(this);
+    }
+
     public void addAsBuyer(Buyer buyer) {
         this.buyer = buyer;
         buyer.addToOrderHistory(this);
@@ -62,6 +70,14 @@ public class Product {
     public void addAsSeller(Seller seller) {
         this.seller = seller;
         seller.addProductToList(this);
+    }
+
+    public Buyer getCurrentHighestBidder() {
+        return currentHighestBidder;
+    }
+
+    public void setCurrentHighestBidder(Buyer currentHighestBidder) {
+        this.currentHighestBidder = currentHighestBidder;
     }
 
     public Boolean getIsSold() {

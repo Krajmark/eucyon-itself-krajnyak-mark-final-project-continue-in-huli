@@ -11,6 +11,9 @@ import java.util.Objects;
 public class BindingResultHandlerServiceImpl implements BindingResultHandlerService {
     @Override
     public void handleBindingResult(BindingResult bindingResult) throws ValidationException {
+        if (bindingResult == null) {
+            return;
+        }
         if (bindingResult.hasErrors()) {
             var asd = bindingResult.getFieldErrors().stream()
                     .map(DefaultMessageSourceResolvable::getDefaultMessage)

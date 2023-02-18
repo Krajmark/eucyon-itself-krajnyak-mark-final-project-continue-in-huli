@@ -35,10 +35,16 @@ import java.util.UUID;
 public class SecurityConfig {
 
     private static final String[] SECURE_LIST = {
+            "/products",
+            "/products/**"
     };
 
     private static final String[] SELLER_SECURE_LIST = {
             "/products/create"
+    };
+
+    private static final String[] BUYER_SECURE_LIST = {
+            "/products/*/bid"
     };
 
     private final RSAPublicKey publicKey;
@@ -58,6 +64,7 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests()
                 .requestMatchers(SELLER_SECURE_LIST).hasAuthority("SCOPE_SELLER")
+                .requestMatchers(BUYER_SECURE_LIST).hasAuthority("SCOPE_BUYER")
                 .requestMatchers(SECURE_LIST).authenticated()
                 .anyRequest().permitAll()
                 .and()

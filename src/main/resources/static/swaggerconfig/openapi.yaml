@@ -16,13 +16,15 @@ servers:
 tags:
   - name: main
     description: Basic stuff...
+  - name: auth
+    description: Authentication related endpoints
+  - name: product
+    description: Product related endpoints
   #  - name: user
   #    description: Operations with users
   #    externalDocs:
   #      description: Register as a customer on our website
   #      url: https://ebayclone-production.up.railway.app/auth/register/buyer
-  - name: auth
-    description: Authentication related endpoints
 paths:
   /index:
     get:
@@ -62,7 +64,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserDTO'
+              $ref: '#/components/schemas/UserCreationDTO'
 
       responses:
         200:
@@ -122,7 +124,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserDTO'
+              $ref: '#/components/schemas/UserCreationDTO'
       responses:
         201:
           description: Successful registration
@@ -134,6 +136,99 @@ paths:
                 $ref: '#/components/schemas/MessageDTO'
         400:
           description: Registration failed due to invalid request body or usertype
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageDTO'
+  /products/create:
+    post:
+      tags:
+        - product
+      summary: Login to the application
+      operationId: login
+      security:
+        - JWT_Auth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductCreationDTO'
+      responses:
+        201:
+          description: Successful registration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductDetailsDTO'
+        401:
+          description: No token added
+        403:
+          description: Not authorized to access resource
+        404:
+          description: Cold not retrieve seller
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageDTO'
+        400:
+          description: Can't create product due to invalid request body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageDTO'
+  /products:
+    get:
+      tags:
+        - product
+      summary: List all products with pages
+      operationId: products
+      security:
+        - JWT_Auth: [ ]
+      parameters:
+        - name: page
+          required: false
+          in: query
+          schema:
+            type: string
+            default: 0
+      responses:
+        200:
+          description: Successful retrieval
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductDetailsDTO'
+        401:
+          description: No token added
+  /products/{id}:
+    get:
+      tags:
+        - product
+      summary: Get specific products by their id
+      operationId: product
+      security:
+        - JWT_Auth: [ ]
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+            default: 1
+      responses:
+        200:
+          description: Successful retrieval
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductDetailsDTO'
+        401:
+          description: No token added
+        400:
+          description: Can't retrieve product due to invalid request/query param
           content:
             application/json:
               schema:
@@ -156,7 +251,7 @@ components:
           type: array
           items:
             type: string
-    UserDTO:
+    UserCreationDTO:
       type: object
       properties:
         username:
@@ -182,6 +277,53 @@ components:
           type: array
           items:
             type: string
+    ProductCreationDTO:
+      type: object
+      required: true
+      properties:
+        name:
+          type: string
+          required: true
+          default: asdName
+        type:
+          type: string
+          required: true
+          default: asdType
+        purchase_price:
+          type: number
+          required: true
+          default: 42069
+        min_bid:
+          type: number
+          required: true
+          default: 420
+        description:
+          type: string
+          required: true
+          default: asdDescription
+        picture_link:
+          type: string
+          required: true
+          default: https://t3.ftcdn.net/jpg/02/59/26/28/360_F_259262856_55HfYlTYfzgr95bJ7w01TdxVBqwmzYZu.jpg
+    ProductDetailsDTO:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+        type:
+          type: string
+        purchase_price:
+          type: number
+        current_bid:
+          type: number
+        currency:
+          type: number
+        description:
+          type: string
+        picture_link:
+          type: string
 
   securitySchemes:
     JWT_Auth:
