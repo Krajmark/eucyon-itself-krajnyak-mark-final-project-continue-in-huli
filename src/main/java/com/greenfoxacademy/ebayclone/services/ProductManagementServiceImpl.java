@@ -85,7 +85,12 @@ public class ProductManagementServiceImpl implements ProductManagementService {
 
     //TODO: refactor this monstrosity
     @Override
-    public ProductDetailsDTO bidOnProduct(String id, ProductBidDTO productBidDTO, BindingResult bindingResult, Authentication authentication) throws ProductNotFoundException, BidTooLowException, ProductAlreadySoldException, NotEnoughBalanceException {
+    public ProductDetailsDTO bidOnProduct(
+            String id,
+            ProductBidDTO productBidDTO,
+            BindingResult bindingResult,
+            Authentication authentication
+    ) throws ProductNotFoundException, BidTooLowException, ProductAlreadySoldException, NotEnoughBalanceException {
         this.bindingResultHandlerService.handleBindingResult(bindingResult);
         int productId = Integer.parseInt(id);
         Optional<Product> productOptional = this.productRepo.findById(productId);
