@@ -19,5 +19,10 @@ public interface ProductManagementService {
 
     ProductDetailsDTO getProductById(String id) throws ProductNotFoundException;
 
-    ProductDetailsDTO bidOnProduct(String id, ProductBidDTO productBidDTO, BindingResult bindingResult, Authentication authentication) throws ProductNotFoundException, BidTooLowException, ProductAlreadySoldException, NotEnoughBalanceException;
+    ProductDetailsDTO bidOnProduct(
+            String id,
+            ProductBidDTO productBidDTO,
+            BindingResult bindingResult,
+            Authentication authentication
+    ) throws ProductNotFoundException, BidTooLowException, ProductAlreadySoldException, NotEnoughBalanceException;
 }
